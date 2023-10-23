@@ -1,1 +1,18 @@
-[{"id":0,"title":"producto prueba","description":"Este es un producto prueba","thumbnail":"Sin imagen","code":"abc123","stock":25}]
+[
+  {
+    "id": 0,
+    "title": "producto prueba 1",
+    "description": "Este es un producto prueba 1",
+    "thumbnail": "Sin imagen",
+    "code": "sddf1223",
+    "stock": 25
+  },
+  {
+    "id": 1,
+    "title": "producto prueba 2",
+    "description": "Este es un producto prueba 2",
+    "thumbnail": "Sin imagen",
+    "code": "sddf1223",
+    "stock": 10
+  }
+]
