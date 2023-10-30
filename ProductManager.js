@@ -23,17 +23,16 @@ class Product {
 
   //mutators to validate field
   // price positive
-  set price(newPrice) {
-    if (newPrice < 0) {
-      throw new Error(">>>>>>>>>>>>> Price can not be negative");
-    }
-    this.#price = newPrice;
-  }
+  // set price(newPrice) {
+  //   if (newPrice < 0) {
+  //     throw new Error(">>>>>>>>>>>>> Price can not be negative");
+  //   }
+  //   this.#price = newPrice;
+  // }
 
-  get price() {
-    return this.#price;
-  }
-  
+  // get price() {
+  //   return this.#price;
+  // }
 
   asPOJO() {
     // javascript object with all ELEMENTS (INCLUDING PRIVATE) visible without class name
@@ -78,6 +77,18 @@ class ProductManager {
     let searched = this.#products.find((p) => p.code === code);
     if (searched)
       throw new Error(`>>>>>>>>>>>>> product with same code: ${code} found`);
+    return searched;
+  }
+
+  #searchSimilarCodeWithId(code, currentProductId) {
+    let searched = this.#products.find(
+      (p) => p.code === code && p.id !== currentProductId
+    );
+    if (searched) {
+      throw new Error(
+        `>>>>>>>>>>>>> product with the same code: ${code} found`
+      );
+    }
     return searched;
   }
 
@@ -138,18 +149,21 @@ class ProductManager {
     await this.#readProducts();
     const index = this.#products.findIndex((p) => p.id === id);
     if (index !== -1) {
+      // check if code already exist
+      this.#searchSimilarCodeWithId(ProductData.code, id);
+      // Use the spread operator to clone the current object's properties
       const updatedProduct = new Product({
         id,
-        // Use the spread operator to clone the current object's properties
-        ...this.#products[index],
-        // and merge them with the new data
-        ...ProductData,
+        ...this.#products[index].asPOJO(), // Get the current product as a POJO
+        ...ProductData, // and merge them with the new data
       });
       this.#products[index] = updatedProduct;
       await this.#writeProducts();
       return updatedProduct;
     } else {
-      throw new Error(">>>>>>>>>>>>> error while updating: user not found");
+      throw new Error(
+        `>>>>>>>>>>>>> error while updating: Product with id ${id} is not found`
+      );
     }
   }
   async deleteProduct(id) {
@@ -160,7 +174,9 @@ class ProductManager {
       await this.#writeProducts();
       return deletedProduct[0];
     } else {
-      throw new Error(">>>>>>>>>>>>> error while updating: user not found");
+      throw new Error(
+        `>>>>>>>>>>>>> error while updating: Product with id ${id} is not found`
+      );
     }
   }
 }
@@ -220,19 +236,38 @@ async function main() {
   });
 
   ///////////// TESTING 2 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /// ✓	MODIFICADO: Se llamará al método “updateProduct” y se intentará cambiar un campo de algún producto con el mismo code que un producto existente, deberia devolver un error
+  try {
+    await pm.updateProduct(1, {
+      title: "producto prueba actualizado",
+      description: "Este es un producto prueba actualizado",
+      price: 300,
+      thumbnail: "Sin imagen",
+      code: "sddf1223",
+      stock: 30,
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+
   /// ✓	Se llamará al método “updateProduct” y se intentará cambiar un campo de algún producto, se evaluará que no se elimine el id y que sí se haya hecho la actualización.
-  await pm.updateProduct(2, {
-    title: "producto prueba actualizado",
-    description: "Este es un producto prueba actualizado",
-    price: 300,
-    thumbnail: "Sin imagen",
-    code: "abc123",
-    //stock: 30,
-  });
+  try {
+    await pm.updateProduct(1, {
+      title: "producto prueba actualizado",
+      description: "Este es un producto prueba actualizado",
+      price: 300,
+      thumbnail: "Sin imagen",
+      code: "sddf1225",
+      stock: 30,
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+
   console.log(await pm.getProducts()); // to see al elements of class as Pojo
   /// ✓	Se llamará al método “deleteProduct”, se evaluará que realmente se elimine el producto o que arroje un error en caso de no existir.
-  await pm.deleteProduct(2);
-  console.log(await pm.getProducts()); // to see al elements of class as Pojo
+    await pm.deleteProduct(2);
+    console.log(await pm.getProducts()); // to see al elements of class as Pojo
 }
 
 main();
