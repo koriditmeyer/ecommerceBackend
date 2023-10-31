@@ -4,13 +4,16 @@ Welcome to the product Manager Backend App.
 
 ## 💻 Technologies Used
 
-![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
-![Node JS](https://img.shields.io/badge/nodedotjs-%23323330.svg?style=for-the-badge&logo=nodedotjs&logoColor=%23339933)
+![Express] (https://img.shields.io/badge/express-Express-brightgreen?logo=express&logoColor=000000&label=%20&labelColor=white&color=000000)
+![JavaScript](https://img.shields.io/badge/javascript-JavaScript-brightgreen?logo=javascript&logoColor=F7DF1E&label=%20&labelColor=black&color=F7DF1E)
+![Node JS](https://img.shields.io/badge/nodedotjs-Node_Js-brightgreen?logo=nodedotjs&logoColor=339933&label=%20&labelColor=black&color=339933)
 
-![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white)
-![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
+![Git](https://img.shields.io/badge/git-Git-brightgreen?logo=git&logoColor=F05032&label=%20&labelColor=black&color=F05032)
+![GitHub](https://img.shields.io/badge/github-GitHub-brightgreen?logo=github&logoColor=white&label=%20&labelColor=black&color=181717)
 
 ## 💼 Technical Elements
 
 - ECMAScript and avanced ECMAScript
 - Asynchronous File System Manager with promises
+- [NEW] Server with Express that in the app.js use the ProductManager class previously created
+- [NEW] Creation of REST API with get petition and with URL params and URL params queries

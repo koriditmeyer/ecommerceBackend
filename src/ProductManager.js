@@ -1,5 +1,7 @@
 // import file system
-const { promises: fs } = require("fs");
+import fs from "fs/promises";
+
+///////////// CLASS /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 class Product {
   #price;
@@ -48,7 +50,7 @@ class Product {
   }
 }
 
-class ProductManager {
+export class ProductManager {
   static #productlastId = 0; // no need to declare this variables except if private like here
   #products;
 
@@ -134,8 +136,16 @@ class ProductManager {
       console.log(error.message);
     }
   }
-  async getProducts() {
+  async getProducts(query = {}) {
     await this.#readProducts();
+    if (query.limit <= 0) {
+      throw new Error(
+        `>>>>>>>>>>>>> The limit entered: ${query.limit} is null, negative `
+      );
+    }
+    if (query.limit) {
+      return this.#products.slice(0, query.limit);
+    }
     return this.#products;
   }
   async getProductsById(id) {
@@ -182,92 +192,92 @@ class ProductManager {
 }
 
 ///////////// TESTING /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-async function main() {
-  /// ✓	Se creará una instancia de la clase “ProductManager”
-  const pm = new ProductManager({ path: "products.json" });
-  /// Initialise the product Manager
-  await pm.init();
+// async function main() {
+//   /// ✓	Se creará una instancia de la clase “ProductManager”
+//   const pm = new ProductManager({ path: "products.json" });
+//   /// Initialise the product Manager
+//   await pm.init();
 
-  /// ✓	Se llamará “getProducts” recién creada la instancia, debe devolver el archivo Json
-  console.log(await pm.getProducts()); // to see al elements of class as Pojo
+//   /// ✓	Se llamará “getProducts” recién creada la instancia, debe devolver el archivo Json
+//   console.log(await pm.getProducts()); // to see al elements of class as Pojo
 
-  /// ✓	Se llamará al método “addProduct” con los campos siguientes
-  await pm.addProduct({
-    title: "producto prueba",
-    description: "Este es un producto prueba",
-    price: 200,
-    thumbnail: "Sin imagen",
-    code: "abc123",
-    stock: 25,
-  });
+//   /// ✓	Se llamará al método “addProduct” con los campos siguientes
+//   await pm.addProduct({
+//     title: "producto prueba",
+//     description: "Este es un producto prueba",
+//     price: 200,
+//     thumbnail: "Sin imagen",
+//     code: "abc123",
+//     stock: 25,
+//   });
 
-  /// ✓	El objeto debe agregarse satisfactoriamente con un id generado automáticamente SIN REPETIRSE
-  /// ✓	Se llamará el método “getProducts” nuevamente, esta vez debe aparecer el producto recién agregado
-  console.log(await pm.getProducts()); // to see al elements of class as Pojo
+//   /// ✓	El objeto debe agregarse satisfactoriamente con un id generado automáticamente SIN REPETIRSE
+//   /// ✓	Se llamará el método “getProducts” nuevamente, esta vez debe aparecer el producto recién agregado
+//   console.log(await pm.getProducts()); // to see al elements of class as Pojo
 
-  /// ✓	Se llamará al método “addProduct” con los mismos campos de arriba, debe arrojar un error porque el código estará repetido.
-  await pm.addProduct({
-    title: "producto prueba",
-    description: "Este es un producto prueba",
-    price: 200,
-    thumbnail: "Sin imagen",
-    code: "abc123",
-    stock: 25,
-  });
+//   /// ✓	Se llamará al método “addProduct” con los mismos campos de arriba, debe arrojar un error porque el código estará repetido.
+//   await pm.addProduct({
+//     title: "producto prueba",
+//     description: "Este es un producto prueba",
+//     price: 200,
+//     thumbnail: "Sin imagen",
+//     code: "abc123",
+//     stock: 25,
+//   });
 
-  /// ✓	Se evaluará que getProductById devuelva error si no encuentra el producto o el producto en caso de encontrarlo
-  //use of instance to operate as it's protected
-  try {
-    const searched = await pm.getProductsById(0);
-    //use of pojo to view
-    console.log(searched);
-  } catch (error) {
-    console.log(error.message);
-  }
+//   /// ✓	Se evaluará que getProductById devuelva error si no encuentra el producto o el producto en caso de encontrarlo
+//   //use of instance to operate as it's protected
+//   try {
+//     const searched = await pm.getProductsById(0);
+//     //use of pojo to view
+//     console.log(searched);
+//   } catch (error) {
+//     console.log(error.message);
+//   }
 
-  /// ✓	Validar que todos los campos sean obligatorios
-  await pm.addProduct({
-    title: "producto prueba",
-    description: "Este es un producto prueba",
-    price: 200,
-    thumbnail: "Sin imagen",
-    code: "abc123",
-    stock: "",
-  });
+//   /// ✓	Validar que todos los campos sean obligatorios
+//   await pm.addProduct({
+//     title: "producto prueba",
+//     description: "Este es un producto prueba",
+//     price: 200,
+//     thumbnail: "Sin imagen",
+//     code: "abc123",
+//     stock: "",
+//   });
 
-  ///////////// TESTING 2 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  /// ✓	MODIFICADO: Se llamará al método “updateProduct” y se intentará cambiar un campo de algún producto con el mismo code que un producto existente, deberia devolver un error
-  try {
-    await pm.updateProduct(1, {
-      title: "producto prueba actualizado",
-      description: "Este es un producto prueba actualizado",
-      price: 300,
-      thumbnail: "Sin imagen",
-      code: "sddf1223",
-      stock: 30,
-    });
-  } catch (error) {
-    console.log(error.message);
-  }
+//   ///////////// TESTING 2 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//   /// ✓	MODIFICADO: Se llamará al método “updateProduct” y se intentará cambiar un campo de algún producto con el mismo code que un producto existente, deberia devolver un error
+//   try {
+//     await pm.updateProduct(1, {
+//       title: "producto prueba actualizado",
+//       description: "Este es un producto prueba actualizado",
+//       price: 300,
+//       thumbnail: "Sin imagen",
+//       code: "sddf1223",
+//       stock: 30,
+//     });
+//   } catch (error) {
+//     console.log(error.message);
+//   }
 
-  /// ✓	Se llamará al método “updateProduct” y se intentará cambiar un campo de algún producto, se evaluará que no se elimine el id y que sí se haya hecho la actualización.
-  try {
-    await pm.updateProduct(1, {
-      title: "producto prueba actualizado",
-      description: "Este es un producto prueba actualizado",
-      price: 300,
-      thumbnail: "Sin imagen",
-      code: "sddf1225",
-      stock: 30,
-    });
-  } catch (error) {
-    console.log(error.message);
-  }
+//   /// ✓	Se llamará al método “updateProduct” y se intentará cambiar un campo de algún producto, se evaluará que no se elimine el id y que sí se haya hecho la actualización.
+//   try {
+//     await pm.updateProduct(1, {
+//       title: "producto prueba actualizado",
+//       description: "Este es un producto prueba actualizado",
+//       price: 300,
+//       thumbnail: "Sin imagen",
+//       code: "sddf1225",
+//       stock: 30,
+//     });
+//   } catch (error) {
+//     console.log(error.message);
+//   }
 
-  console.log(await pm.getProducts()); // to see al elements of class as Pojo
-  /// ✓	Se llamará al método “deleteProduct”, se evaluará que realmente se elimine el producto o que arroje un error en caso de no existir.
-    await pm.deleteProduct(2);
-    console.log(await pm.getProducts()); // to see al elements of class as Pojo
-}
+//   console.log(await pm.getProducts()); // to see al elements of class as Pojo
+//   /// ✓	Se llamará al método “deleteProduct”, se evaluará que realmente se elimine el producto o que arroje un error en caso de no existir.
+//     await pm.deleteProduct(2);
+//     console.log(await pm.getProducts()); // to see al elements of class as Pojo
+// }
 
-main();
+// main();
