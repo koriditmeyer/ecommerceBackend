@@ -5,8 +5,8 @@
   "description": "product manager with express",
   "main": "src/app.js",
   "scripts": {
-    "start":"node src/app.js" ,
-    "dev":"nodemon -e 'js,html' src/app.js"
+    "start": "node src/app.js",
+    "dev": "nodemon -e 'js,html' src/app.js"
   },
   "repository": {
     "type": "git",
@@ -19,6 +19,8 @@
   },
   "homepage": "https://github.com/koriditmeyer/ProductManager#readme",
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "express-handlebars": "^7.1.2",
+    "multer": "^1.4.5-lts.1"
   }
 }
