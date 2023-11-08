@@ -12,8 +12,23 @@ Welcome to the product Manager Backend App.
 ![GitHub](https://img.shields.io/badge/github-GitHub-brightgreen?logo=github&logoColor=white&label=%20&labelColor=black&color=181717)
 
 ## 💼 Technical Elements
+8/11/23:
+- [NEW] Use of middlewares with Express
+- [NEW] Use of router with Express
+- [NEW] Add of new api endpoints and static enpoints
+- [NEW] Add of file upload api in Express with Multer
 
-- ECMAScript and avanced ECMAScript
+31/10/23
+- Server with Express that in the app.js use the ProductManager class previously created
+- Creation of REST API with get petition and with URL params and URL params queries
+
+30/10/23
 - Asynchronous File System Manager with promises
-- [NEW] Server with Express that in the app.js use the ProductManager class previously created
-- [NEW] Creation of REST API with get petition and with URL params and URL params queries
+
+19/10/23
+- ECMAScript and avanced ECMAScript
+
+
+
+
+
