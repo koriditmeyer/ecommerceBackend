@@ -2,53 +2,8 @@
 import fs from "fs/promises";
 
 ///////////// CLASS /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+import Product from "../models/Product.js"
 
-class Product {
-  #price;
-  constructor({
-    id, //id = Product.#generateNewId(), // ejemplo de creacion de argumento opcional
-    title,
-    description,
-    price,
-    thumbnail,
-    code,
-    stock,
-  }) {
-    this.id = id;
-    this.title = title;
-    this.description = description;
-    this.price = price; // good to validate that input is positive but also need to declare it private so cant not modify it after
-    this.thumbnail = thumbnail;
-    this.code = code;
-    this.stock = stock;
-  }
-
-  //mutators to validate field
-  // price positive
-  // set price(newPrice) {
-  //   if (newPrice < 0) {
-  //     throw new Error(">>>>>>>>>>>>> Price can not be negative");
-  //   }
-  //   this.#price = newPrice;
-  // }
-
-  // get price() {
-  //   return this.#price;
-  // }
-
-  asPOJO() {
-    // javascript object with all ELEMENTS (INCLUDING PRIVATE) visible without class name
-    return {
-      id: this.id,
-      title: this.title,
-      description: this.description,
-      price: this.#price,
-      thumbnail: this.thumbnail,
-      code: this.code,
-      stock: this.stock,
-    };
-  }
-}
 
 export class ProductManager {
   static #productlastId = 0; // no need to declare this variables except if private like here
@@ -65,6 +20,7 @@ export class ProductManager {
     } catch (error) {
       await this.#writeProducts();
     }
+
     if (this.#products.length === 0) {
       ProductManager.#productlastId = -1;
     } else {
@@ -105,26 +61,47 @@ export class ProductManager {
     await fs.writeFile(this.path, JSON.stringify(this.#products));
   }
   // add products
-  async addProduct({ title, description, price, thumbnail, code, stock }) {
+  async addProduct({
+    title,
+    description,
+    code,
+    price,
+    status,
+    stock,
+    category,
+    thumbnail,
+  }) {
+    let hasError = false; // Initialize a flag to track errors
     try {
       // Validate that all required fields are provided
-      if (!title || !description || !price || !thumbnail || !code || !stock) {
-        throw new Error(">>>>>>>>>>>>> All input fields are required");
+      if (!title || !description || !code || !price || !stock || !category) {
+        hasError = true;
+        throw new Error(
+          ">>>>>>>>>>>>> All input fields are required (exept thumbnail and status)"
+        );
       }
       // Read existing products and at it to the products array
       await this.#readProducts();
       // Check in the array for products with the same code
-      this.#searchSimilarCode(code);
+      try {
+        this.#searchSimilarCode(code);
+      } catch (searchError) {
+        hasError = true; // Set the flag to true if an error is encountered
+        throw searchError; // Rethrow the error to handle it in the router.post handler
+      }
       // Generate a new product with new id
       const id = ProductManager.#generateNewId();
+      //console.log(id)
       const product = new Product({
         id,
         title,
         description,
-        price,
-        thumbnail,
         code,
+        price,
+        status,
         stock,
+        category,
+        thumbnail,
       });
       // Add the product to the array
       this.#products.push(product);
@@ -133,7 +110,10 @@ export class ProductManager {
 
       return product;
     } catch (error) {
-      console.log(error.message);
+      if (hasError) {
+        error.isCustomError = true; // Set a custom property to indicate a custom error
+      }
+      throw error; // Rethrow the error to handle it in the router.post handler
     }
   }
   async getProducts(query = {}) {
@@ -159,8 +139,12 @@ export class ProductManager {
     await this.#readProducts();
     const index = this.#products.findIndex((p) => p.id === id);
     if (index !== -1) {
-      // check if code already exist
-      this.#searchSimilarCodeWithId(ProductData.code, id);
+      // Check in the array for products with the same code
+      try {
+        this.#searchSimilarCodeWithId(ProductData.code, id);
+      } catch (searchError) {
+        throw searchError; // Rethrow the error to handle it in the router.post handler
+      }
       // Use the spread operator to clone the current object's properties
       const updatedProduct = new Product({
         id,
@@ -174,18 +158,22 @@ export class ProductManager {
       throw new Error(
         `>>>>>>>>>>>>> error while updating: Product with id ${id} is not found`
       );
+      
     }
   }
   async deleteProduct(id) {
     await this.#readProducts();
     const index = this.#products.findIndex((p) => p.id === id);
     if (index !== -1) {
-      const deletedProduct = this.#products.splice(id, 1);
+      const deletedProduct = this.#products.splice(index, 1);
       await this.#writeProducts();
+      console.log(id)
+      console.log(this.#products.splice(id, 1))
+      console.log(deletedProduct)
       return deletedProduct[0];
     } else {
       throw new Error(
-        `>>>>>>>>>>>>> error while updating: Product with id ${id} is not found`
+        `>>>>>>>>>>>>> error while deleting: Product with id ${id} is not found`
       );
     }
   }

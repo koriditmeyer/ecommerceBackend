@@ -14,7 +14,7 @@ const app = express();
 ///////////// CONFIG //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// EXPRESS
 app.use(express.urlencoded({ extended: true })); // allow server to handle better queries from url
-//app.use(express.json()); // deserialize the json send by client and returns it in body field
+app.use(express.json()); // deserialize the json send by client and returns it in body field
 
 ///////////// SERVER /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// Middleware at router level
