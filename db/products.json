@@ -1,1 +1,170 @@
-[]
+[
+  {
+    "id": 1,
+    "title": "Water Quality Sensor",
+    "description": "High-precision water quality sensor for accurate measurements.",
+    "code": "WQS001",
+    "price": 299.99,
+    "status": true,
+    "stock": 50,
+    "category": "Water Quality",
+    "thumbnail": [
+      "https://example.com/image1.jpg",
+      "https://example.com/image2.jpg"
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Water Analyzer Kit",
+    "description": "Comprehensive water analysis kit for testing multiple parameters.",
+    "code": "WAK002",
+    "price": 499.99,
+    "status": true,
+    "stock": 30,
+    "category": "Water Quality",
+    "thumbnail": [
+      "https://example.com/image3.jpg",
+      "https://example.com/image4.jpg"
+    ]
+  },
+  {
+    "id": 3,
+    "title": "pH Meter",
+    "description": "Digital pH meter for measuring acidity and alkalinity levels in water.",
+    "code": "PHM003",
+    "price": 79.99,
+    "status": true,
+    "stock": 100,
+    "category": "Water Quality",
+    "thumbnail": [
+      "https://example.com/image5.jpg",
+      "https://example.com/image6.jpg"
+    ]
+  },
+  {
+    "id": 4,
+    "title": "Dissolved Oxygen Probe",
+    "description": "Probe for measuring dissolved oxygen levels in water bodies.",
+    "code": "DOP004",
+    "price": 149.99,
+    "status": true,
+    "stock": 40,
+    "category": "Water Quality",
+    "thumbnail": [
+      "https://example.com/image7.jpg",
+      "https://example.com/image8.jpg"
+    ]
+  },
+  {
+    "id": 5,
+    "title": "Water Sampling Kit TDS updated",
+    "description": "Turbidity meter for measuring the cloudiness or haziness of water.",
+    "code": "TM005",
+    "price": 159.99,
+    "status": true,
+    "stock": 60,
+    "category": "Water Quality",
+    "thumbnail": [
+      "https://example.com/image9.jpg",
+      "https://example.com/image10.jpg"
+    ]
+  },
+  {
+    "id": 6,
+    "title": "Water Quality Test Strips",
+    "description": "Test strips for quick water quality assessments.",
+    "code": "WQTS006",
+    "price": 19.99,
+    "status": true,
+    "stock": 200,
+    "category": "Water Quality",
+    "thumbnail": [
+      "https://example.com/image11.jpg",
+      "https://example.com/image12.jpg"
+    ]
+  },
+  {
+    "id": 7,
+    "title": "Water Quality Monitoring System",
+    "description": "Integrated system for continuous water quality monitoring.",
+    "code": "WQMS007",
+    "price": 999.99,
+    "status": true,
+    "stock": 20,
+    "category": "Water Quality",
+    "thumbnail": [
+      "https://example.com/image13.jpg",
+      "https://example.com/image14.jpg"
+    ]
+  },
+  {
+    "id": 8,
+    "title": "Chlorine Test Kit",
+    "description": "Kit for testing chlorine levels in water treatment processes.",
+    "code": "CTK008",
+    "price": 49.99,
+    "status": true,
+    "stock": 80,
+    "category": "Water Quality",
+    "thumbnail": [
+      "https://example.com/image15.jpg",
+      "https://example.com/image16.jpg"
+    ]
+  },
+  {
+    "id": 9,
+    "title": "Salinity Meter",
+    "description": "Digital meter for measuring salinity levels in water.",
+    "code": "SM009",
+    "price": 89.99,
+    "status": true,
+    "stock": 70,
+    "category": "Water Quality",
+    "thumbnail": [
+      "https://example.com/image17.jpg",
+      "https://example.com/image18.jpg"
+    ]
+  },
+  {
+    "id": 10,
+    "title": "Water Quality Data Logger",
+    "description": "Data logger for recording water quality measurements over time.",
+    "code": "WQDL010",
+    "price": 199.99,
+    "status": true,
+    "stock": 25,
+    "category": "Water Quality",
+    "thumbnail": [
+      "https://example.com/image19.jpg",
+      "https://example.com/image20.jpg"
+    ]
+  },
+  {
+    "id": 11,
+    "title": "Water Sampling Kit",
+    "description": "Sampling kit for collecting water samples for analysis.",
+    "code": "WSK011",
+    "price": 149.99,
+    "status": true,
+    "stock": 35,
+    "category": "Water Quality",
+    "thumbnail": [
+      "https://example.com/image21.jpg",
+      "https://example.com/image22.jpg"
+    ]
+  },
+  {
+    "id": 1,
+    "title": "Water Sampling Kit TDS",
+    "description": "Sampling kit for collecting water samples for analysis. TDS",
+    "code": "WSK0113",
+    "price": 139.99,
+    "status": true,
+    "stock": 30,
+    "category": "Water Quality",
+    "thumbnail": [
+      "https://example.com/image132.jpg",
+      "https://example.com/image43.jpg"
+    ]
+  }
+]

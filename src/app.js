@@ -3,7 +3,7 @@
 import express from "express";
 /// import constants configuration parameters in external file
 import { PORT } from "./config.js";
-import __dirname from "./config.js";
+//import __dirname from "./config.js";
 /// import endpoints
 import { apiRouter } from "./routers/api.router.js";
 import { webRouter } from "./routers/web.router.js";

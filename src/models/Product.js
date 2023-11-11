@@ -1,4 +1,4 @@
-export default class Product {
+export  class Product {
   
     constructor({
       id, //id = Product.#generateNewId(), // ejemplo de creacion de argumento opcional

@@ -12,6 +12,7 @@ const pm = new ProductManager({ path: PRODUCTS_JSON });
 await pm.init();
 
 router.get("/", async (req, res) => {
+  //@ts-ignore
   const limit = parseInt(req.query.limit);
   try {
     const products = await pm.getProducts({ limit });

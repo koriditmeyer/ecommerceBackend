@@ -5,3 +5,4 @@ const __dirname = dirname(__filename);
 export default __dirname;
 export const PORT = 8080;
 export const PRODUCTS_JSON = "db/products.json";
+export const CART_JSON = "db/cart.json";
