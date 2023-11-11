@@ -1,0 +1,146 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "E-commerce",
+    "dateExported": "2023-11-11T06:56:40.501Z",
+    "version": "1.1",
+    "folders": [
+        {
+            "_id": "a3308fb3-33a2-47d9-ae66-2ac2915d9da8",
+            "name": "Products",
+            "containerId": "",
+            "created": "2023-11-11T01:55:38.431Z",
+            "sortNum": 10000
+        },
+        {
+            "_id": "108d105b-c51d-4ab1-86f5-735494c3377c",
+            "name": "Cart",
+            "containerId": "",
+            "created": "2023-11-11T01:55:53.751Z",
+            "sortNum": 20000
+        }
+    ],
+    "requests": [
+        {
+            "_id": "7c7c5b36-0862-47a1-9d10-6b6c574ae22e",
+            "colId": "a7a04192-d102-4f84-8837-4e5f97c72db2",
+            "containerId": "a3308fb3-33a2-47d9-ae66-2ac2915d9da8",
+            "name": "Get All Products",
+            "url": "http://localhost:8080/api/products/",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2023-11-11T01:47:18.406Z",
+            "modified": "2023-11-11T01:47:27.460Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "8319988c-a234-47d9-a098-363b87de63fe",
+            "colId": "a7a04192-d102-4f84-8837-4e5f97c72db2",
+            "containerId": "a3308fb3-33a2-47d9-ae66-2ac2915d9da8",
+            "name": "Get Product by id",
+            "url": "http://localhost:8080/api/products/5",
+            "method": "GET",
+            "sortNum": 20000,
+            "created": "2023-11-11T01:48:00.500Z",
+            "modified": "2023-11-11T01:48:09.595Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "9e86d712-e3b6-49ab-98c7-8c5710343117",
+            "colId": "a7a04192-d102-4f84-8837-4e5f97c72db2",
+            "containerId": "a3308fb3-33a2-47d9-ae66-2ac2915d9da8",
+            "name": "Add product",
+            "url": "http://localhost:8080/api/products/",
+            "method": "POST",
+            "sortNum": 30000,
+            "created": "2023-11-11T01:49:45.262Z",
+            "modified": "2023-11-11T01:52:08.379Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\r\n      \"title\": \"Water Sampling Kit TDS\",\r\n      \"description\": \"Sampling kit for collecting water samples for analysis. TDS\",\r\n      \"code\": \"WSK0113\",\r\n      \"price\": 139.99,\r\n      \"stock\": 30,\r\n      \"category\": \"Water Quality\",\r\n      \"thumbnail\": [\"https://example.com/image132.jpg\", \"https://example.com/image43.jpg\"]\r\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "3b5efeba-1ddd-41a1-9f4d-b05059bbd038",
+            "colId": "a7a04192-d102-4f84-8837-4e5f97c72db2",
+            "containerId": "a3308fb3-33a2-47d9-ae66-2ac2915d9da8",
+            "name": "Update Product",
+            "url": "http://localhost:8080/api/products/5",
+            "method": "PUT",
+            "sortNum": 40000,
+            "created": "2023-11-11T01:52:39.415Z",
+            "modified": "2023-11-11T01:53:35.894Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\r\n      \"title\": \"Water Sampling Kit TDS updated\",\r\n      \"price\": 159.99\r\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "fbda9ae5-0d6d-498c-a4a9-965aef29503f",
+            "colId": "a7a04192-d102-4f84-8837-4e5f97c72db2",
+            "containerId": "a3308fb3-33a2-47d9-ae66-2ac2915d9da8",
+            "name": "Delete Product",
+            "url": "http://localhost:8080/api/products/0",
+            "method": "DELETE",
+            "sortNum": 50000,
+            "created": "2023-11-11T01:53:53.567Z",
+            "modified": "2023-11-11T01:54:28.491Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "7ae60b9c-0d33-42c7-9e70-0191154358d6",
+            "colId": "a7a04192-d102-4f84-8837-4e5f97c72db2",
+            "containerId": "108d105b-c51d-4ab1-86f5-735494c3377c",
+            "name": "Get Cart by id",
+            "url": "http://localhost:8080/api/carts/13",
+            "method": "GET",
+            "sortNum": 70000,
+            "created": "2023-11-11T01:56:12.591Z",
+            "modified": "2023-11-11T02:02:41.971Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "7dd0744a-eecf-46c4-adad-fc0ab87e6eda",
+            "colId": "a7a04192-d102-4f84-8837-4e5f97c72db2",
+            "containerId": "108d105b-c51d-4ab1-86f5-735494c3377c",
+            "name": "Add Cart",
+            "url": "http://localhost:8080/api/carts/",
+            "method": "POST",
+            "sortNum": 90000,
+            "created": "2023-11-11T02:00:04.406Z",
+            "modified": "2023-11-11T02:00:26.884Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "b7af8fde-b1b6-4c8d-89b9-42e5a5d16ffd",
+            "colId": "a7a04192-d102-4f84-8837-4e5f97c72db2",
+            "containerId": "108d105b-c51d-4ab1-86f5-735494c3377c",
+            "name": "Add product to cart",
+            "url": "http://localhost:8080/api/carts/5/product/1",
+            "method": "POST",
+            "sortNum": 100000,
+            "created": "2023-11-11T02:01:44.672Z",
+            "modified": "2023-11-11T06:51:59.334Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        }
+    ]
+}
