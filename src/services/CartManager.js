@@ -4,6 +4,9 @@ import fs from "fs/promises";
 ///////////// CLASS /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 import { Cart } from "../models/Cart.js";
 import { CartProductManager } from "./CartProductManager.js";
+import { ProductManager } from "./ProductManager.js";
+// import constants configuration parameters in external file
+import { PRODUCTS_JSON } from "../config.js";
 
 export class CartManager {
   static #CartlastId = 0; // no need to declare this variables except if private like here
@@ -68,26 +71,31 @@ export class CartManager {
   }
 
   async addCartProduct(id, ProductId) {
+    // check if productId exist
+    const pm = new ProductManager({ path: PRODUCTS_JSON });
+    try {
+      await pm.getProductsById(ProductId);
+    } catch (error) {
+      throw error;
+    }
     // get cart by id
     let cart = await this.getCartByIdProducts(id);
-    console.log(cart)
     // get products
     let products = cart.products;
-    //console.log(products)
     /// ✓	Se creará una instancia de la clase “ProductManager”
-    const cpm = new CartProductManager({products});
+    const cpm = new CartProductManager({ products });
     // check if the product is already in the cart
     const searched = cpm.getCartProductById(id, ProductId);
     // add new product or update quantity
     if (!searched) {
       const products = cpm.addCartProduct(ProductId);
-      console.log(this.#Carts);
       await this.#writeCarts();
       return products;
     } else {
       let newQuantity = ++searched.quantity;
-      console.log(searched.quantity);
-      const products = cpm.updateCartProduct(ProductId, {quantity: newQuantity});
+      const products = cpm.updateCartProduct(ProductId, {
+        quantity: newQuantity,
+      });
       await this.#writeCarts();
       return products;
     }

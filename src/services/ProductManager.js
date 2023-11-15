@@ -2,8 +2,7 @@
 import fs from "fs/promises";
 
 ///////////// CLASS /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-import {Product} from "../models/Product.js"
-
+import { Product } from "../models/Product.js";
 
 export class ProductManager {
   static #productlastId = 0; // no need to declare this variables except if private like here
@@ -138,28 +137,27 @@ export class ProductManager {
   async updateProduct(id, ProductData) {
     await this.#readProducts();
     const index = this.#products.findIndex((p) => p.id === id);
-    if (index !== -1) {
-      // Check in the array for products with the same code
-      try {
-        this.#searchSimilarCodeWithId(ProductData.code, id);
-      } catch (searchError) {
-        throw searchError; // Rethrow the error to handle it in the router.post handler
-      }
-      // Use the spread operator to clone the current object's properties
-      const updatedProduct = new Product({
-        id,
-        ...this.#products[index].asPOJO(), // Get the current product as a POJO
-        ...ProductData, // and merge them with the new data
-      });
-      this.#products[index] = updatedProduct;
-      await this.#writeProducts();
-      return updatedProduct;
-    } else {
+    if (index === -1) {
       throw new Error(
         `>>>>>>>>>>>>> error while updating: Product with id ${id} is not found`
       );
-      
     }
+    // Check in the array for products with the same code
+    try {
+      this.#searchSimilarCodeWithId(ProductData.code, id);
+    } catch (searchError) {
+      throw searchError; // Rethrow the error to handle it in the router.post handler
+    }
+    // Delete the 'id' field from ProductData if it exists
+    delete ProductData.id;
+    // Use the spread operator to clone the current object's properties
+    const updatedProduct = new Product({
+      ...this.#products[index].asPOJO(), // Get the current product as a POJO
+      ...ProductData, // and merge them with the new data
+    });
+    this.#products[index] = updatedProduct;
+    await this.#writeProducts();
+    return updatedProduct;
   }
   async deleteProduct(id) {
     await this.#readProducts();
@@ -167,9 +165,9 @@ export class ProductManager {
     if (index !== -1) {
       const deletedProduct = this.#products.splice(index, 1);
       await this.#writeProducts();
-      console.log(id)
-      console.log(this.#products.splice(id, 1))
-      console.log(deletedProduct)
+      console.log(id);
+      console.log(this.#products.splice(id, 1));
+      console.log(deletedProduct);
       return deletedProduct[0];
     } else {
       throw new Error(

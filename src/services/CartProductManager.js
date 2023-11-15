@@ -15,27 +15,25 @@ export class CartProductManager {
     //   throw new Error(
     //     `>>>>>>>>>>>>> In cart with id ${id} product with id ${ProductId} is not found`
     //   );
-     return searched;
+    return searched;
   }
 
   addCartProduct(product) {
     // create New product
-    const cartProduct = new CartProducts({product});
+    const cartProduct = new CartProducts({ product });
     // Add the Cart to the array
     this.products.push(cartProduct);
     return cartProduct;
   }
 
-  updateCartProduct(ProductId,UpdatedData){
-      const index = this.products.findIndex((p) => p.product === ProductId);
-      console.log(this.products[index])
-    console.log(index)
+  updateCartProduct(ProductId, UpdatedData) {
+    const index = this.products.findIndex((p) => p.product === ProductId);
     const updatedProduct = new CartProducts({
-        ProductId,
-        ...this.products[index], // Get the current product 
-        ...UpdatedData, // and merge them with the new data
-      });
-      this.products[index] = updatedProduct;
-      return updatedProduct;
+      ProductId,
+      ...this.products[index], // Get the current product
+      ...UpdatedData, // and merge them with the new data
+    });
+    this.products[index] = updatedProduct;
+    return updatedProduct;
   }
 }
