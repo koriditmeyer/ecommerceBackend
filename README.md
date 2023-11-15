@@ -3,7 +3,8 @@ Welcome to the product Manager Backend App.
 </h3>
 
 ## 💻 Technologies Used
-
+![Socket.io](https://img.shields.io/badge/socketdotio-socket.io-brightgreen?logo=socketdotio&logoColor=010101&label=%20&labelColor=white&color=010101)
+![Handlebars](https://img.shields.io/badge/handlebarsdotjs-Handlebars-brightgreen?logo=handlebarsdotjs&logoColor=000000&label=%20&labelColor=white&color=000000)
 ![Express](https://img.shields.io/badge/express-Express-brightgreen?logo=express&logoColor=000000&label=%20&labelColor=white&color=000000)
 ![JavaScript](https://img.shields.io/badge/javascript-JavaScript-brightgreen?logo=javascript&logoColor=F7DF1E&label=%20&labelColor=black&color=F7DF1E)
 ![Node JS](https://img.shields.io/badge/nodedotjs-Node_Js-brightgreen?logo=nodedotjs&logoColor=339933&label=%20&labelColor=black&color=339933)
@@ -12,11 +13,16 @@ Welcome to the product Manager Backend App.
 ![GitHub](https://img.shields.io/badge/github-GitHub-brightgreen?logo=github&logoColor=white&label=%20&labelColor=black&color=181717)
 
 ## 💼 Technical Elements
+15/11/23:
+
+- [NEW] Use of Handlebars with Express
+- [NEW] Use of websockets with Socket.io
+
 8/11/23:
-- [NEW] Use of middlewares with Express
-- [NEW] Use of router with Express
-- [NEW] Add of new api endpoints and static enpoints
-- [NEW] Add of file upload api in Express with Multer
+- Use of middlewares with Express
+- Use of router with Express
+- Add of new api endpoints and static enpoints
+- Add of file upload api in Express with Multer
 
 31/10/23
 - Server with Express that in the app.js use the ProductManager class previously created
