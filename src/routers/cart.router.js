@@ -31,7 +31,7 @@ router.get("/:cid", async (req, res) => {
     const products = await cm.getCartByIdProducts(cid);
     res.json(products);
   } catch (error) {
-    res.json({
+    res.status(400).send({
       status: "error",
       message: error.message,
     });

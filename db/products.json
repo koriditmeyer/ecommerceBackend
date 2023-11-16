@@ -9,7 +9,7 @@
     "stock": 50,
     "category": "Water Quality",
     "thumbnail": [
-      "https://example.com/image1.jpg",
+      "https://fr.hach.com/cb66f9ca19dd5a01efa187fb98ecfce156/cms/images/Parameters-2020/DO/Colorimetric-Method-380x380.jpg",
       "https://example.com/image2.jpg"
     ]
   },
@@ -23,7 +23,7 @@
     "stock": 30,
     "category": "Water Quality",
     "thumbnail": [
-      "https://example.com/image3.jpg",
+      "https://fr.hach.com/cbcf49c180c23ce23c48e5c09561d989a0/cms/images/Parameters-2020/DO/Winkler-Titration-380x380.jpg",
       "https://example.com/image4.jpg"
     ]
   },
@@ -37,7 +37,7 @@
     "stock": 100,
     "category": "Water Quality",
     "thumbnail": [
-      "https://example.com/image5.jpg",
+      "https://fr.hach.com/cbb3a23d452d845f904adc99d7abb6aa1a/cms/images/Parameters-2020/pH/pH-Potentiometric-Method-380x380.jpg",
       "https://example.com/image6.jpg"
     ]
   },
@@ -51,7 +51,7 @@
     "stock": 40,
     "category": "Water Quality",
     "thumbnail": [
-      "https://example.com/image7.jpg",
+      "https://fr.hach.com/cb5abe85dc13462ac49c360b0fb405a614/cms/images/Parameters-2020/DO/Electrodes-380x380.jpg",
       "https://example.com/image8.jpg"
     ]
   },
@@ -65,8 +65,8 @@
     "stock": 60,
     "category": "Water Quality",
     "thumbnail": [
-      "https://example.com/image9.jpg",
-      "https://example.com/image10.jpg"
+      "https://m.media-amazon.com/images/I/61p4wbyuS2L.jpg",
+      "https://productimages.withfloats.com/tile/5a0561472532c50bb825a57e.jpg"
     ]
   },
   {
@@ -79,7 +79,7 @@
     "stock": 200,
     "category": "Water Quality",
     "thumbnail": [
-      "https://example.com/image11.jpg",
+      "https://fr.hach.com/cb386bd899b79f8b07c4cf7e860c9f3091/cms/images/Parameters-2020/pH/pH-Photometric-Method-380x380.jpg",
       "https://example.com/image12.jpg"
     ]
   },
@@ -93,7 +93,7 @@
     "stock": 20,
     "category": "Water Quality",
     "thumbnail": [
-      "https://example.com/image13.jpg",
+      "https://fr.hach.com/cb6989f8ee9a93acb4abb99aa8207ccd59/cms/images/Parameters-2020/COD/Prometheus-Batch-9-Images-COD-Methods-Online-Process-Testing-380x380.jpg",
       "https://example.com/image14.jpg"
     ]
   },
@@ -107,7 +107,7 @@
     "stock": 80,
     "category": "Water Quality",
     "thumbnail": [
-      "https://example.com/image15.jpg",
+      "https://fr.hach.com/cb1c2876a2db7371c63799a7f19ce47b0f/cms/images/Parameters-2020/pH/pH-Visual-Method-380x380.jpg",
       "https://example.com/image16.jpg"
     ]
   },
@@ -121,7 +121,7 @@
     "stock": 70,
     "category": "Water Quality",
     "thumbnail": [
-      "https://example.com/image17.jpg",
+      "https://fr.hach.com/cbbf5dfcb7fe9d2559531035115e74f5e5/cms/images/Parameters-2020/COD/Prometheus-Batch-9-Images-COD-Methods-Method--Lab-Testing-380x380.jpg",
       "https://example.com/image18.jpg"
     ]
   },
@@ -135,7 +135,7 @@
     "stock": 25,
     "category": "Water Quality",
     "thumbnail": [
-      "https://example.com/image19.jpg",
+      "https://fr.hach.com/cb9e2a5fdd3441d3feafe41fa684e4cd3a/cms/images/Parameters-2020/Nitrate/Digital_Titrator_380x380.jpg",
       "https://example.com/image20.jpg"
     ]
   },
@@ -149,7 +149,7 @@
     "stock": 35,
     "category": "Water Quality",
     "thumbnail": [
-      "https://example.com/image21.jpg",
+      "https://fr.hach.com/cb197a9b7c5dc9ea976763c96c82442613/cms/images/Parameters-2020/Nitrate/DR_Spectrophotometers_380x380.jpg",
       "https://example.com/image22.jpg"
     ]
   },
@@ -163,7 +163,7 @@
     "stock": 30,
     "category": "Water Quality",
     "thumbnail": [
-      "https://example.com/image132.jpg",
+      "https://fr.hach.com/cb585101b8ccd8c0752aa4a79397ba9369/cms/images/Parameters-2020/Nitrate/DR_Nitrate_Reagent_380x380.jpg",
       "https://example.com/image43.jpg"
     ]
   }
