@@ -40,7 +40,38 @@ webRouter.get("/cart", async (req, res) => {
 
     /* Render view with combined data */
 
-    res.render("cart", { title: "My Cart", cartProducts: cartProducts });
+    res.render("cart", {
+      title: "My Cart",
+      cartProducts: cartProducts,
+      cid: cid,
+    });
+  } catch (error) {
+    res.status(500).render("error", { error: error.message });
+  }
+});
+
+webRouter.get("/", async (req, res) => {
+  /* Fetch Cart Data */
+  try {
+    /* Fetch all Products Data  */
+    const productResponse = await fetch(`http://localhost:8080/api/products/`);
+    const products = await productResponse.json();
+    res.render("home", { title: "My Products", products: products });
+  } catch (error) {
+    res.status(500).render("error", { error: error.message });
+  }
+});
+
+webRouter.get("/product/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  /* Fetch Cart Data */
+  try {
+    /* Fetch all Products Data  */
+    const productResponse = await fetch(
+      `http://localhost:8080/api/products/${id}`
+    );
+    const product = await productResponse.json();
+    res.render("productDetail", { product: product });
   } catch (error) {
     res.status(500).render("error", { error: error.message });
   }

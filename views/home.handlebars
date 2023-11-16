@@ -1,0 +1,10 @@
+<section class="text-gray-600 body-font">
+    <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900 text-center">{{title}}</h1>
+    <div class="container px-5 py-5 mx-auto">
+        <div class="flex flex-wrap -m-4">
+            {{#each products}}
+            {{>item}}
+            {{/each}}
+        </div>
+    </div>
+</section>
