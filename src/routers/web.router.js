@@ -3,6 +3,8 @@ import upload from "../middlewares/multer.js"; // external middleware -- upload 
 import cm from "../routers/cart.router.js";
 
 export const webRouter = Router();
+import {EventEmitter} from "events"
+var ee = new EventEmitter();
 
 webRouter.post("/uploads", upload.single("image"), (req, res) => {
   res.json({
@@ -62,6 +64,15 @@ webRouter.get("/", async (req, res) => {
   }
 });
 
+webRouter.get("/product/add", async (req, res) => {
+  /* Fetch Cart Data */
+  try {
+    res.render("addProduct", { title: "Add a Product" });
+  } catch (error) {
+    res.status(500).render("error", { error: error.message });
+  }
+});
+
 webRouter.get("/product/:id", async (req, res) => {
   const id = parseInt(req.params.id);
   /* Fetch Cart Data */
@@ -70,8 +81,40 @@ webRouter.get("/product/:id", async (req, res) => {
     const productResponse = await fetch(
       `http://localhost:8080/api/products/${id}`
     );
+    /* Extract the Error Message from API Response and stop execution of program */
+    if (!productResponse.ok) {
+      const errorResponse = await productResponse.json();
+      throw new Error(errorResponse.message); // Use the error message from the API
+    }
     const product = await productResponse.json();
     res.render("productDetail", { product: product });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).render("error", { error: error.message });
+  }
+});
+
+webRouter.get("/chat", async (req, res) => {
+  /* Fetch Cart Data */
+  res.render("chat", { script: "./chat" });
+});
+
+webRouter.get("/realTimeProducts", async (req, res) => {
+  try {
+    const productResponse = await fetch(`http://localhost:8080/api/products/`);
+    const products = await productResponse.json();
+    req["io"].emit("products", products);
+    res.render("realTimeProducts", {
+      script: "./realTimeProducts",
+      title: "My Products"
+    });
+    /* Fetch all Products Data  */
+    ee.on('internal-api-product-post',async (event)=>{
+      const productResponse = await fetch(`http://localhost:8080/api/products/`);
+      const products = await productResponse.json();
+      req["io"].emit("products", products);
+    })
+    //req["io"].emit("products", products);
   } catch (error) {
     res.status(500).render("error", { error: error.message });
   }

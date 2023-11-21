@@ -5,6 +5,8 @@ import { ProductManager } from "../services/ProductManager.js";
 import { PRODUCTS_JSON } from "../config.js";
 
 const router = Router();
+import {EventEmitter} from "events"
+var ee = new EventEmitter();
 
 /// ✓	Se creará una instancia de la clase “ProductManager”
 const pm = new ProductManager({ path: PRODUCTS_JSON });
@@ -18,7 +20,7 @@ router.get("/", async (req, res) => {
     const products = await pm.getProducts({ limit });
     res.json(products);
   } catch (error) {
-    res.json({
+    res.status(400).send({
       status: "error",
       message: error.message,
     });
@@ -31,7 +33,7 @@ router.get("/:pid", async (req, res) => {
     const product = await pm.getProductsById(id);
     res.json(product);
   } catch (error) {
-    res.json({
+    res.status(400).send({
       status: "error",
       message: error.message,
     });
@@ -42,6 +44,8 @@ router.post("/", async (req, res) => {
   let product = req.body;
   try {
     const addedProduct = await pm.addProduct(product);
+    req['io'].emit('api-product-post', addedProduct); // Emitting a message to all connected clients
+    ee.emit('internal-api-product-post',{'event':true} )
     res.json(addedProduct);
   } catch (error) {
     if (error.isCustomError) {

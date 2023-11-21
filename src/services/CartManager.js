@@ -66,7 +66,7 @@ export class CartManager {
     await this.#readCarts();
     let searched = this.#Carts.find((c) => c.id === id);
     if (!searched)
-      throw new Error(`>>>>>>>>>>>>> cart with id ${id} is not found`);
+      throw new Error(`cart with id ${id} is not found`);
     return searched;
   }
 

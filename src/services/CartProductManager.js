@@ -13,7 +13,7 @@ export class CartProductManager {
     let searched = this.products.find((p) => p.product === ProductId);
     // if (!searched)
     //   throw new Error(
-    //     `>>>>>>>>>>>>> In cart with id ${id} product with id ${ProductId} is not found`
+    //     `In cart with id ${id} product with id ${ProductId} is not found`
     //   );
     return searched;
   }

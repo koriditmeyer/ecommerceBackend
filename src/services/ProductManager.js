@@ -33,7 +33,7 @@ export class ProductManager {
   #searchSimilarCode(code) {
     let searched = this.#products.find((p) => p.code === code);
     if (searched)
-      throw new Error(`>>>>>>>>>>>>> product with same code: ${code} found`);
+      throw new Error(`product with same code: ${code} found`);
     return searched;
   }
 
@@ -43,7 +43,7 @@ export class ProductManager {
     );
     if (searched) {
       throw new Error(
-        `>>>>>>>>>>>>> product with the same code: ${code} found`
+        `product with the same code: ${code} found`
       );
     }
     return searched;
@@ -75,8 +75,9 @@ export class ProductManager {
       // Validate that all required fields are provided
       if (!title || !description || !code || !price || !stock || !category) {
         hasError = true;
+        console.log(`${title}-${description} -${code}- ${price}- ${stock}- ${category}`)
         throw new Error(
-          ">>>>>>>>>>>>> All input fields are required (exept thumbnail and status)"
+          "All input fields are required (exept thumbnail and status)"
         );
       }
       // Read existing products and at it to the products array
@@ -131,7 +132,7 @@ export class ProductManager {
     await this.#readProducts();
     let searched = this.#products.find((p) => p.id === id);
     if (!searched)
-      throw new Error(`>>>>>>>>>>>>> product with id ${id} is not found`);
+      throw new Error(`product with id ${id} is not found`);
     return searched;
   }
   async updateProduct(id, ProductData) {
@@ -139,7 +140,7 @@ export class ProductManager {
     const index = this.#products.findIndex((p) => p.id === id);
     if (index === -1) {
       throw new Error(
-        `>>>>>>>>>>>>> error while updating: Product with id ${id} is not found`
+        `error while updating: Product with id ${id} is not found`
       );
     }
     // Check in the array for products with the same code
@@ -171,7 +172,7 @@ export class ProductManager {
       return deletedProduct[0];
     } else {
       throw new Error(
-        `>>>>>>>>>>>>> error while deleting: Product with id ${id} is not found`
+        `error while deleting: Product with id ${id} is not found`
       );
     }
   }
