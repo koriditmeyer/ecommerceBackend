@@ -1,11 +1,9 @@
-import { Router } from "express";
-// import Product Manager js
-import { ProductManager } from "../services/ProductManager.js";
-// import constants configuration parameters in external file
+import { Router } from "express"; // import Product Manager js
+import { ProductManager } from "../services/ProductManager.js"; // import constants configuration parameters in external file
 import { PRODUCTS_JSON } from "../config.js";
+import {EventEmitter} from "events"
 
 const router = Router();
-import {EventEmitter} from "events"
 var ee = new EventEmitter();
 
 /// ✓	Se creará una instancia de la clase “ProductManager”
