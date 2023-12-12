@@ -1,8 +1,8 @@
 {
   "type": "module",
-  "name": "productmanager",
+  "name": "ecommerceBackend",
   "version": "1.3.0",
-  "description": "product manager with express",
+  "description": "E-commerce backend with Express",
   "main": "src/app.js",
   "scripts": {
     "start": "node src/app.js",
@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/koriditmeyer/ProductManager.git"
+    "url": "git+https://github.com/koriditmeyer/ecommerceBackend.git"
   },
   "author": "Kori Ditmeyer",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/koriditmeyer/ProductManager/issues"
+    "url": "https://github.com/koriditmeyer/ecommerceBackend/issues"
   },
-  "homepage": "https://github.com/koriditmeyer/ProductManager#readme",
+  "homepage": "https://github.com/koriditmeyer/ecommerceBackend#readme",
   "dependencies": {
     "express": "^4.18.2",
     "express-handlebars": "^7.1.2",
