@@ -29,6 +29,7 @@ webRouter.get("/", async (req, res) => {
     /* Fetch all Products Data  */
     const productResponse = await fetch(`http://localhost:8080/api/products/`);
     const products = await productResponse.json();
+    //console.log(products)
     res.render("home", { title: "My Products", products: products });
   } catch (error) {
     res.status(500).render("error", { error: error.message });

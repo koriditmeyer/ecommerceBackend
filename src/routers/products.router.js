@@ -14,10 +14,10 @@ const pm = new ProductManager();
 router.get("/", async (req, res) => {
   // Retrieve query parameters with default values
   // @ts-ignore
-  const limit = parseInt(req.query.limit) || 3; // Page size : Default limit is 10
+  const limit = parseInt(req.query.limit) || 2; // Page size : Default limit is 10
   const category = req.query.category; // Retrieve the category
   // @ts-ignore
-  const page = parseInt(req.query.page) || 1; // Default page is 1
+  const page = parseInt(req.query.page) || 2; // Default page is 1
   // @ts-ignore
   const sortOption = req.query.sort || ""; // Default sort is empty, meaning no sort
 
@@ -35,7 +35,7 @@ router.get("/", async (req, res) => {
   // Sorting stage
   let sortStage = {};
   if (sortOption) {
-    sortStage.price = sortOption === "desc" ? -1 : 1 ;
+    sortStage.price = sortOption === "desc" ? -1 : 1;
   }
 
   // Aggregate pipeline stages
@@ -44,21 +44,21 @@ router.get("/", async (req, res) => {
   //   sortStage,
   //   // Add more stages if need
   // ];
-  const aggregateQuery= Product.aggregate()
-  aggregateQuery.match(matchStage)
-  aggregateQuery.sort(sortStage)
+  const aggregateQuery = Product.aggregate([
+    { $match: matchStage },
+  //  { $sort: sortStage },
+  ]);
 
   const options = {
-    page: page,
-    limit: limit,
+    page,
+    limit,
     lean: true,
   };
 
   try {
-    
     const products = await Product.aggregatePaginate(aggregateQuery, options);
     //const products = await pm.getProducts({ limit });
-
+    console.log(products)
     const context = {
       pageTitle: "Products",
       existDocs: products.docs.length > 0,
@@ -71,9 +71,11 @@ router.get("/", async (req, res) => {
       hasPrevPage: products.hasPrevPage,
       prevPage: products.prevPage,
       pagingCounter: products.pagingCounter,
+      totalDocs: products.totalDocs
     };
 
-    res.json(context);
+    const send = res.json(context);
+    //console.log(send)
   } catch (error) {
     res.status(400).send({
       status: "error",
