@@ -1,103 +1,119 @@
 // import file system
-import fs from "fs/promises";
-
-///////////// CLASS /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+import { Product } from "../models/Product.js";
 import { Cart } from "../models/Cart.js";
-import { CartProductManager } from "./CartProductManager.js";
-import { ProductManager } from "./ProductManager.js";
+import { randomUUID } from "crypto";
 // import constants configuration parameters in external file
-import { PRODUCTS_JSON } from "../config.js";
 
 export class CartManager {
-  static #CartlastId = 0; // no need to declare this variables except if private like here
-  #Carts;
-
-  constructor({ path }) {
-    this.path = path;
-    this.#Carts = [];
-  }
-
-  async init() {
-    try {
-      await this.#readCarts();
-    } catch (error) {
-      await this.#writeCarts();
+  async #cartExist(id, productId, checkproductExist) {
+    // Retrieve the cart
+    const cart = await Cart.findOne({ _id: id }).lean();
+    // Check if the cart exists
+    if (!cart) {
+      throw new Error(`Cart with id ${id} does not exist`);
     }
-
-    if (this.#Carts.length === 0) {
-      CartManager.#CartlastId = -1;
-    } else {
-      CartManager.#CartlastId = this.#Carts.at(-1).id;
+    if (productId) {
+      // Check if the product exists in the cart
+      const productInCart = await cart.products.find(
+        (p) => p.product === productId
+      );
+      if (!productInCart && checkproductExist) {
+        throw new Error(
+          `Product with id ${productId} does not exist in the cart`
+        );
+      }
+      return { cart, productInCart };
     }
+    return { cart };
   }
 
-  static #generateNewId() {
-    return ++CartManager.#CartlastId;
-  }
-
-  // read Carts
-  async #readCarts() {
-    const CartsInJson = await fs.readFile(this.path, "utf-8");
-    const dataCarts = JSON.parse(CartsInJson);
-    this.#Carts = dataCarts.map((u) => new Cart(u));
-  }
-  // write Carts
-  async #writeCarts() {
-    await fs.writeFile(this.path, JSON.stringify(this.#Carts));
-  }
   // add Carts
-  async addCart() {
-    // Read existing Carts and at it to the Carts array
-    await this.#readCarts();
-    // Generate a new Cart with new id
-    const id = CartManager.#generateNewId();
-    //console.log(id)
-    const cart = new Cart({
-      id,
-    });
-    // Add the Cart to the array
-    this.#Carts.push(cart);
-    // write Carts from array to JSON
-    await this.#writeCarts();
-    return cart;
+  async addCart(cartData) {
+    cartData._id = randomUUID(); // If productData has no ID add ID
+    const cart = await Cart.create(cartData); // Instanciate and create product in DB with mongoose
+    return cart; // RETURN POJO
   }
 
-  async getCartByIdProducts(id) {
-    await this.#readCarts();
-    let searched = this.#Carts.find((c) => c.id === id);
-    if (!searched)
+  async getCartById(id) {
+    const searched = Cart.findById(id).lean();
+    if (!searched) {
       throw new Error(`cart with id ${id} is not found`);
+    }
     return searched;
   }
 
-  async addCartProduct(id, ProductId) {
+  async addCartProduct(id, productId, quantity) {
     // check if productId exist
-    const pm = new ProductManager({ path: PRODUCTS_JSON });
-    try {
-      await pm.getProductsById(ProductId);
-    } catch (error) {
-      throw error;
+    const productExists = await Product.exists({ _id: productId });
+    if (!productExists) {
+      throw new Error(`Product with id ${productId} does not exist`);
     }
-    // get cart by id
-    let cart = await this.getCartByIdProducts(id);
-    // get products
-    let products = cart.products;
-    /// ✓	Se creará una instancia de la clase “ProductManager”
-    const cpm = new CartProductManager({ products });
-    // check if the product is already in the cart
-    const searched = cpm.getCartProductById(id, ProductId);
-    // add new product or update quantity
-    if (!searched) {
-      const products = cpm.addCartProduct(ProductId);
-      await this.#writeCarts();
+    // Check if cart exist and product is in the cart
+    let { cart, productInCart } = await this.#cartExist(id, productId, false);
+
+    //add new product or update quantity
+    if (!productInCart) {
+      const products = await Cart.updateOne(
+        { _id: id },
+        { $push: { products: { product: productId, quantity: 1 } } }
+      ).lean();
       return products;
     } else {
-      let newQuantity = ++searched.quantity;
-      const products = cpm.updateCartProduct(ProductId, {
-        quantity: newQuantity,
-      });
-      await this.#writeCarts();
+      const product = await cart.products.find((p) => p.product === productId);
+      let newQuantity;
+      if (product) {
+        quantity
+          ? (newQuantity = quantity)
+          : (newQuantity = ++product.quantity);
+      }
+      const products = await Cart.updateOne(
+        { _id: id, "products.product": productId },
+        { $set: { "products.$.quantity": newQuantity } }
+      ).lean();
       return products;
     }
+  }
+
+  async deleteCartProduct(id, productId) {
+    // Check if cart exist and product exist in cart
+    await this.#cartExist(id, productId, true);
+    // Delete product
+    const deleted = await Cart.updateOne(
+      { _id: id },
+      { $pull: { products: { product: productId } } }
+    ).lean();
+    return deleted;
+  }
+
+  async updateCart(id, products) {
+    // check if in products, productId exist
+    for (const e of products) {
+      const productExists = await Product.exists({ _id: e.product }).lean();
+
+      if (!productExists) {
+        throw new Error(`Product with id ${e.product} does not exist`);
+      }
+      if (e.quantity < 0 || !e.quantity) {
+        throw new Error(
+          `For product with id ${e.product}, quantity: ${e.quantity} is not valid`
+        );
+      }
+    }
+    //update to new products
+    const updatedCart = await Cart.updateOne(
+      { _id: id },
+      { $set: { products: products } }
+    );
+    return updatedCart;
+  }
+
+  async deleteCartProducts(id) {
+    // Check if cart exist
+    await this.#cartExist(id);
+    const searched = await Cart.updateOne(
+      { _id: id },
+      { $set: { products: [] } }
+    );
+    return searched;
   }
 }

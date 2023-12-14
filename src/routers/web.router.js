@@ -1,16 +1,16 @@
 import { Router } from "express";
-import upload from "../middlewares/multer.js"; // external middleware -- upload file
+//import {upload} from "../middlewares/multer.js"; // external middleware -- upload file
 import cm from "../routers/cart.router.js";
 
 export const webRouter = Router();
 import {EventEmitter} from "events"
 var ee = new EventEmitter();
 
-webRouter.post("/uploads", upload.single("image"), (req, res) => {
-  res.json({
-    file: req.file,
-  });
-});
+// webRouter.post("/uploads", upload.single("image"), (req, res) => {
+//   res.json({
+//     file: req.file,
+//   });
+// });
 
 webRouter.get("/cart", async (req, res) => {
   /* Fetch Cart Data */

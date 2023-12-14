@@ -6,10 +6,20 @@
 
 import express from "express";                        // import express server
 import { engine } from "express-handlebars";          // import hadlebars
-import { PORT } from "./config.js";                   // import constants configuration parameters in external file
+import { MONGODB_CNX_STR, PORT } from "./config.js";  // import constants configuration parameters in external file
 import { apiRouter } from "./routers/api.router.js";  // import endpoints
 import { webRouter } from "./routers/web.router.js";  // import endpoints
 import { Server } from "socket.io";                   // import Socket io
+import mongoose from "mongoose";                      // import Mongoose
+
+/*
+ *
+ * CONNECT TO MONGO DB before creating the app with express
+ *
+ */
+
+await mongoose.connect(MONGODB_CNX_STR)
+console.log(`DB connected to ${MONGODB_CNX_STR}`)
 
 /*
  *
@@ -20,9 +30,9 @@ import { Server } from "socket.io";                   // import Socket io
 const app = express();                                // Create app with express
 app.engine("handlebars", engine());                   // Initialize the engine using handlebars
 const httpServer = app.listen(PORT, () =>             // create httpServer
-  console.log(`Listening on port: ${PORT}`)
+  console.log(`HTTP server listening on port: ${PORT}`)
 ); 
-const io = new Server(httpServer);              // Update the server to a socket server
+const io = new Server(httpServer);                    // Update the server to a socket server
 
 /*
  *
@@ -74,8 +84,8 @@ io.on('connection', (socket) => {                          //listen to the conec
   
   /* Chat message */
   
-  let userName = socket.handshake.auth.user                    //get information send with the socket
-  socket.broadcast.emit('newUser', userName)                   //Use of broadcast method to send information 
+  let userName = socket.handshake.auth.user                //get information send with the socket
+  socket.broadcast.emit('newUser', userName)               //Use of broadcast method to send information 
   //console.log('New connection:', socket.id);
   socket.emit('ServerMessages',messages)                   //Send the messages stored in array
   socket.on("ClientMessage", data =>{                      //Do something when receive message

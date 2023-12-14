@@ -1,35 +1,20 @@
 import { Router } from "express";
 // import Cart Manager js
 import { CartManager } from "../services/CartManager.js";
-// import constants configuration parameters in external file
-import { CART_JSON } from "../config.js";
 
 const router = Router();
 
-/// ✓	Se creará una instancia de la clase “CartManager”
-const cm = new CartManager({ path: CART_JSON });
-/// Initialise the cart Manager
-await cm.init();
+// ✓	CREATE AN INSTANCE OF CART MANAGER
+const cm = new CartManager();
 
+// ✓	CREATE CART (EMPTY)
 router.post("/", async (req, res) => {
   try {
-    const addedCart = await cm.addCart();
+    const cartData = [
+      {}
+    ]
+    const addedCart = await cm.addCart(cartData);
     res.json(addedCart);
-  } catch (error) {
-    if (error.isCustomError) {
-      res.status(400).send({
-        status: "error",
-        message: error.message,
-      });
-    }
-  }
-});
-
-router.get("/:cid", async (req, res) => {
-  const cid = parseInt(req.params.cid);
-  try {
-    const products = await cm.getCartByIdProducts(cid);
-    res.json(products);
   } catch (error) {
     res.status(400).send({
       status: "error",
@@ -38,12 +23,88 @@ router.get("/:cid", async (req, res) => {
   }
 });
 
+// ✓	GET CART DATA
+router.get("/:cid", async (req, res) => {
+  const cid = req.params.cid;
+  try {
+    const cart = await cm.getCartById(cid);
+    res.json(cart);
+  } catch (error) {
+    res.status(400).send({
+      status: "error",
+      message: error.message,
+    });
+  }
+});
+
+// ✓	ADD NEW PRODUCT TO CART AND IF EXIST INCREMENT QUANTITY
 router.post("/:cid/product/:pid", async (req, res) => {
-  const cid = parseInt(req.params.cid);
-  const pid = parseInt(req.params.pid);
+  const { cid, pid } = req.params;
   try {
     const addedCartProduct = await cm.addCartProduct(cid, pid);
     res.status(201).json(addedCartProduct);
+  } catch (error) {
+    res.status(400).send({
+      status: "error",
+      message: error.message,
+    });
+  }
+});
+
+// ✓	DELETE A PRODUCT FROM CART
+router.delete("/:cid/product/:pid", async (req, res) => {
+  const { cid, pid } = req.params;
+  try {
+    const deletedProduct = await cm.deleteCartProduct(cid, pid);
+    res.json(deletedProduct);
+  } catch (error) {
+    res.status(400).send({
+      status: "error",
+      message: error.message,
+    });
+  }
+});
+
+// ✓	UDATE CART WITH NEW PRODUCTS
+router.put("/:cid", async (req, res) => {
+  const cid = req.params.cid;
+  let products = req.body;
+  try {
+    const updatedCart = await cm.updateCart(cid,products);
+    res.json(updatedCart);
+  } catch (error) {
+    res.status(400).send({
+      status: "error",
+      message: error.message,
+    });
+  }
+});
+
+// ✓	UDATE PRODUCT IN CART WITH NEW QUANTITY
+router.put("/:cid/product/:pid", async (req, res) => {
+  const { cid, pid } = req.params;
+  let quantity = req.body.quantity;
+  try {
+    const updatedCartProductQuantity = await cm.addCartProduct(
+      cid,
+      pid,
+      quantity
+    );
+    res.status(201).json(updatedCartProductQuantity);
+  } catch (error) {
+    res.status(400).send({
+      status: "error",
+      message: error.message,
+    });
+  }
+});
+
+// ✓	DELETE ALL PRODUCTS FROM CART
+router.delete("/:cid", async (req, res) => {
+  const cid = req.params.cid;
+  try {
+    const deletedProducts = await cm.deleteCartProducts(cid);
+    res.json(deletedProducts);
   } catch (error) {
     res.status(400).send({
       status: "error",

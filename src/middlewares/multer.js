@@ -1,12 +1,9 @@
-///////////// IMPORT /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// import external middleware
-import multer from "multer";
+import multer from "multer"; // import external middleware
 
-///////////// CONFIG //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/// MULTER
+// MULTER CONFIG
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "./static");
+    cb(null, "./static/img");
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
@@ -15,4 +12,7 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
-export default upload;
+
+export function extractFile(fieldname){
+  return upload.single(fieldname)
+};
