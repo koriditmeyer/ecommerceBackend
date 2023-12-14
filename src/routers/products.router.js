@@ -105,6 +105,7 @@ router.put("/:pid/thumbnailUrl",extractFile('pictureURL',maxPicUpload), async (r
   });
  }
  try {
+  // @ts-ignore
   const ProductData = {thumbnail: req.files.map(e =>e.path)}
   const modified = await pm.updateProduct(id, ProductData);
   res.json(modified);

@@ -1,9 +1,10 @@
 import { Product } from "../models/Product.js";
 import { randomUUID } from "crypto";
 
+
+
 export class ProductManager {
-
-
+ 
   // add products
   async addProduct(productData) {
     // If productData has no ID add ID
@@ -13,7 +14,7 @@ export class ProductManager {
     // RETURN POJO
     return product.toObject();
   }
-
+  
   async getProducts(query = {}) {
     if (query.limit <= 0) {
       throw new Error(`The limit entered: ${query.limit} is null, negative `);

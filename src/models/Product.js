@@ -3,7 +3,7 @@ import { Schema, model } from "mongoose";
 const productSchema = new Schema(
   {
     _id: { type: String, required: true },
-    title: { type: String, required: true },
+    title: { type: String, index: true, required: true },
     attribute: { type: String },
     description: { type: String, required: true },
     brand: { type: String },
@@ -17,7 +17,7 @@ const productSchema = new Schema(
     category: { type: String, required: true },
     badge: { type: String },
     thumbnail: {
-      type: Array,
+      type: [String],
       default: ["static\\img\\products\\defaultProduct.jpeg"],
       required: false,
     }, // Set thumbnail as an array of strings, default to an empty array
@@ -40,4 +40,5 @@ const productSchema = new Schema(
   }
 );
 
-export const Product = model("products", productSchema);
+
+export const Product = model('Products', productSchema);

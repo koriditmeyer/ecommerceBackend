@@ -5,6 +5,7 @@ import { randomUUID } from "crypto";
 // import constants configuration parameters in external file
 
 export class CartManager {
+  
   async #cartExist(id, productId, checkproductExist) {
     // Retrieve the cart
     const cart = await Cart.findOne({ _id: id }).lean();
@@ -35,7 +36,7 @@ export class CartManager {
   }
 
   async getCartById(id) {
-    const searched = Cart.findById(id).lean();
+    const searched = Cart.findById(id).populate('products.product').lean();
     if (!searched) {
       throw new Error(`cart with id ${id} is not found`);
     }
