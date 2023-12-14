@@ -1,8 +1,10 @@
 import { Router } from "express"; // import Product Manager js
 import { ProductManager } from "../services/ProductManager.js"; // import constants configuration parameters in external file
-import {EventEmitter} from "events"
+import { EventEmitter } from "events";
 import { extractFile } from "../middlewares/multer.js";
-const maxPicUpload = 10
+import { Product } from "../models/Product.js";
+
+const maxPicUpload = 10;
 const router = Router();
 var ee = new EventEmitter();
 
@@ -10,11 +12,68 @@ var ee = new EventEmitter();
 const pm = new ProductManager();
 
 router.get("/", async (req, res) => {
-  //@ts-ignore
-  const limit = parseInt(req.query.limit);
+  // Retrieve query parameters with default values
+  // @ts-ignore
+  const limit = parseInt(req.query.limit) || 3; // Page size : Default limit is 10
+  const category = req.query.category; // Retrieve the category
+  // @ts-ignore
+  const page = parseInt(req.query.page) || 1; // Default page is 1
+  // @ts-ignore
+  const sortOption = req.query.sort || ""; // Default sort is empty, meaning no sort
+
+  // Set up filter and options for aggregation
+  let matchStage = {};
+  // If a category filter is provided, use it in the match stage
+  if (category) {
+    matchStage.category = category;
+  }
+  // If a search query is provided, use it to filter the title
+  if (req.query.query) {
+    matchStage.title = new RegExp(req.query.query, "i"); //match both uppercase and lowercase instances of the search term
+  }
+
+  // Sorting stage
+  let sortStage = {};
+  if (sortOption) {
+    sortStage.price = sortOption === "desc" ? -1 : 1 ;
+  }
+
+  // Aggregate pipeline stages
+  // const aggregateQuery = [
+  //   { $match: matchStage },
+  //   sortStage,
+  //   // Add more stages if need
+  // ];
+  const aggregateQuery= Product.aggregate()
+  aggregateQuery.match(matchStage)
+  aggregateQuery.sort(sortStage)
+
+  const options = {
+    page: page,
+    limit: limit,
+    lean: true,
+  };
+
   try {
-    const products = await pm.getProducts({ limit });
-    res.json(products);
+    
+    const products = await Product.aggregatePaginate(aggregateQuery, options);
+    //const products = await pm.getProducts({ limit });
+
+    const context = {
+      pageTitle: "Products",
+      existDocs: products.docs.length > 0,
+      docs: products.docs,
+      limit: products.limit,
+      page: products.page,
+      totalPages: products.totalPages,
+      hasNextPage: products.hasNextPage,
+      nextPage: products.nextPage,
+      hasPrevPage: products.hasPrevPage,
+      prevPage: products.prevPage,
+      pagingCounter: products.pagingCounter,
+    };
+
+    res.json(context);
   } catch (error) {
     res.status(400).send({
       status: "error",
@@ -36,29 +95,29 @@ router.get("/:pid", async (req, res) => {
   }
 });
 
-router.post("/",extractFile('pictureURL',maxPicUpload), async (req, res) => {
+router.post("/", extractFile("pictureURL", maxPicUpload), async (req, res) => {
   // to add to req.body the information about picture
-  if (req.files?.length){
-    console.log(req.files)
+  if (req.files?.length) {
+    console.log(req.files);
     // @ts-ignore
-    req.body.thumbnail = req.files.map(e =>e.path);
+    req.body.thumbnail = req.files.map((e) => e.path);
     //req.body.thumbnail = req.files to get all images caracteristics
   }
   try {
-    const addedProduct = await pm.addProduct(req.body); 
-    req['io'].emit('api-product-post', addedProduct); // Emitting a message to all connected clients
-    ee.emit('internal-api-product-post',{'event':true} )
+    const addedProduct = await pm.addProduct(req.body);
+    req["io"].emit("api-product-post", addedProduct); // Emitting a message to all connected clients
+    ee.emit("internal-api-product-post", { event: true });
     res.status(201).json(addedProduct);
   } catch (error) {
-      res.status(400).send({
-        status: "error",
-        message: error.message,
-      });
+    res.status(400).send({
+      status: "error",
+      message: error.message,
+    });
   }
 });
 
 router.put("/:pid", async (req, res) => {
-  if(req.body.thumbnail) {
+  if (req.body.thumbnail) {
     return res.status(400).send({
       status: "error",
       message: "can not modify picture URL with this endpoint",
@@ -67,13 +126,13 @@ router.put("/:pid", async (req, res) => {
   let updatedPart = req.body;
   const id = req.params.pid;
   try {
-    const updatedProduct = await pm.updateProduct(id,updatedPart);
+    const updatedProduct = await pm.updateProduct(id, updatedPart);
     res.json(updatedProduct);
   } catch (error) {
-    if(error.message === 'id not found'){
-      res.status(404)
+    if (error.message === "id not found") {
+      res.status(404);
     } else {
-      res.status(400)
+      res.status(400);
     }
     res.json({
       status: "error",
@@ -88,33 +147,37 @@ router.delete("/:pid", async (req, res) => {
     const deletedProduct = await pm.deleteProduct(id);
     res.json(deletedProduct);
   } catch (error) {
-      res.status(400).send({
-        status: "error",
-        message: error.message,
-      });
-  }
-});
-
-// UPDATE PICTURE TO PRODUCT
-router.put("/:pid/thumbnailUrl",extractFile('pictureURL',maxPicUpload), async (req, res) => {
-  const id = req.params.pid;
-  if (!req.files){
-  res.status(400).send({
-    status: "error",
-    message: "You need to upload a picture",
-  });
- }
- try {
-  // @ts-ignore
-  const ProductData = {thumbnail: req.files.map(e =>e.path)}
-  const modified = await pm.updateProduct(id, ProductData);
-  res.json(modified);
-} catch (error) {
     res.status(400).send({
       status: "error",
       message: error.message,
     });
-}
+  }
 });
+
+// UPDATE PICTURE TO PRODUCT
+router.put(
+  "/:pid/thumbnailUrl",
+  extractFile("pictureURL", maxPicUpload),
+  async (req, res) => {
+    const id = req.params.pid;
+    if (!req.files) {
+      res.status(400).send({
+        status: "error",
+        message: "You need to upload a picture",
+      });
+    }
+    try {
+      // @ts-ignore
+      const ProductData = { thumbnail: req.files.map((e) => e.path) };
+      const modified = await pm.updateProduct(id, ProductData);
+      res.json(modified);
+    } catch (error) {
+      res.status(400).send({
+        status: "error",
+        message: error.message,
+      });
+    }
+  }
+);
 
 export default router;

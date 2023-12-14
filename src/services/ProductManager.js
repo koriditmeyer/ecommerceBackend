@@ -19,10 +19,6 @@ export class ProductManager {
     if (query.limit <= 0) {
       throw new Error(`The limit entered: ${query.limit} is null, negative `);
     }
-    if (query.limit) {
-      return await Product.find().limit(query.limit).lean();
-    }
-    query.limit = 10
     return await Product.find().limit(query.limit).lean();
   }
 

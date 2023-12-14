@@ -1,6 +1,15 @@
 <h3 align="center">
-Welcome to the product Manager Backend App. 
+Welcome to the E-Commerce Express Backend project. 
 </h3>
+
+## 🌎 VIEW - Front end with Handlebars
+
+- Products page: http://localhost:8080/
+- Cart page: http://localhost:8080/cart
+- Product upload page: http://localhost:8080/product/add
+- Chat page: http://localhost:8080/chat
+
+
 
 ## 💻 Technologies Used
 ![Socket.io](https://img.shields.io/badge/socketdotio-socket.io-brightgreen?logo=socketdotio&logoColor=010101&label=%20&labelColor=white&color=010101)
@@ -13,10 +22,18 @@ Welcome to the product Manager Backend App.
 ![GitHub](https://img.shields.io/badge/github-GitHub-brightgreen?logo=github&logoColor=white&label=%20&labelColor=black&color=181717)
 
 ## 💼 Technical Elements
+
+14/12/23:
+
+- [NEW] Migrate file storage from local to MONGODB ATLAS. Update the services to manage the MONGODB queries
+- [NEW] Add new endpoints for the CART, and use of multer for products pictures upload
+- [NEW] Use of a pre midelware in the cart schema to populate the cart products data for FIND queries
+- [NEW] Use of paginate with mongoose-paginate-v2 and implement it inside of handlebars
+
 15/11/23:
 
-- [NEW] Use of Handlebars with Express
-- [NEW] Use of websockets with Socket.io
+- Use of Handlebars with Express
+- Use of websockets with Socket.io
 
 8/11/23:
 - Use of middlewares with Express

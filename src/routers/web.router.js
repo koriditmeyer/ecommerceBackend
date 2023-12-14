@@ -1,10 +1,8 @@
 import { Router } from "express";
 
 export const webRouter = Router();
-import {EventEmitter} from "events"
+import { EventEmitter } from "events";
 var ee = new EventEmitter();
-
-
 
 webRouter.get("/cart", async (req, res) => {
   /* Fetch Cart Data */
@@ -60,7 +58,7 @@ webRouter.get("/product/:id", async (req, res) => {
       throw new Error(errorResponse.message); // Use the error message from the API
     }
     const product = await productResponse.json();
-    console.log(product.thumbnail[0])
+    console.log(product.thumbnail[0]);
     res.render("productDetail", { product: product });
   } catch (error) {
     console.log(error.message);
@@ -80,14 +78,16 @@ webRouter.get("/realTimeProducts", async (req, res) => {
     req["io"].emit("products", products);
     res.render("realTimeProducts", {
       script: "./realTimeProducts",
-      title: "My Products"
+      title: "My Products",
     });
     /* Fetch all Products Data  */
-    ee.on('internal-api-product-post',async (event)=>{
-      const productResponse = await fetch(`http://localhost:8080/api/products/`);
+    ee.on("internal-api-product-post", async (event) => {
+      const productResponse = await fetch(
+        `http://localhost:8080/api/products/`
+      );
       const products = await productResponse.json();
       req["io"].emit("products", products);
-    })
+    });
     //req["io"].emit("products", products);
   } catch (error) {
     res.status(500).render("error", { error: error.message });
