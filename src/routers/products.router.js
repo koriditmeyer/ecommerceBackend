@@ -2,14 +2,14 @@ import { Router } from "express"; // import Product Manager js
 import { ProductManager } from "../services/ProductManager.js"; // import constants configuration parameters in external file
 import {EventEmitter} from "events"
 import { extractFile } from "../middlewares/multer.js";
-
+const maxPicUpload = 10
 const router = Router();
 var ee = new EventEmitter();
 
 /// ✓	Se creará una instancia de la clase “ProductManager”
 const pm = new ProductManager();
 
-router.get("/",extractFile('pictureURL'), async (req, res) => {
+router.get("/", async (req, res) => {
   //@ts-ignore
   const limit = parseInt(req.query.limit);
   try {
@@ -36,10 +36,16 @@ router.get("/:pid", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
-  let product = req.body;
+router.post("/",extractFile('pictureURL',maxPicUpload), async (req, res) => {
+  // to add to req.body the information about picture
+  if (req.files?.length){
+    console.log(req.files)
+    // @ts-ignore
+    req.body.thumbnail = req.files.map(e =>e.path);
+    //req.body.thumbnail = req.files to get all images caracteristics
+  }
   try {
-    const addedProduct = await pm.addProduct(product);
+    const addedProduct = await pm.addProduct(req.body); 
     req['io'].emit('api-product-post', addedProduct); // Emitting a message to all connected clients
     ee.emit('internal-api-product-post',{'event':true} )
     res.status(201).json(addedProduct);
@@ -52,6 +58,12 @@ router.post("/", async (req, res) => {
 });
 
 router.put("/:pid", async (req, res) => {
+  if(req.body.thumbnail) {
+    return res.status(400).send({
+      status: "error",
+      message: "can not modify picture URL with this endpoint",
+    });
+  }
   let updatedPart = req.body;
   const id = req.params.pid;
   try {
@@ -83,8 +95,25 @@ router.delete("/:pid", async (req, res) => {
   }
 });
 
-router.post("/:pid/fotourl",extractFile('pictureURL'), async (req, res) => {
-
+// UPDATE PICTURE TO PRODUCT
+router.put("/:pid/thumbnailUrl",extractFile('pictureURL',maxPicUpload), async (req, res) => {
+  const id = req.params.pid;
+  if (!req.files){
+  res.status(400).send({
+    status: "error",
+    message: "You need to upload a picture",
+  });
+ }
+ try {
+  const ProductData = {thumbnail: req.files.map(e =>e.path)}
+  const modified = await pm.updateProduct(id, ProductData);
+  res.json(modified);
+} catch (error) {
+    res.status(400).send({
+      status: "error",
+      message: error.message,
+    });
+}
 });
 
 export default router;

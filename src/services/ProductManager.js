@@ -34,6 +34,8 @@ export class ProductManager {
   }
 
   async updateProduct(id, ProductData) {
+    // Delete the 'id' field from ProductData if it exists
+    delete ProductData.id;
     const updatedProduct = await Product.findByIdAndUpdate(
       id,
       { $set: ProductData },
@@ -44,9 +46,6 @@ export class ProductManager {
         `error while updating: Product with id ${id} is not found`
       );
     }
-    // Delete the 'id' field from ProductData if it exists
-    delete ProductData.id;
-
     return updatedProduct;
   }
 

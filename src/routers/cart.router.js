@@ -14,7 +14,7 @@ router.post("/", async (req, res) => {
       {}
     ]
     const addedCart = await cm.addCart(cartData);
-    res.json(addedCart);
+    res.status(201).json(addedCart);
   } catch (error) {
     res.status(400).send({
       status: "error",
