@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
-//import mongoosePaginate from 'mongoose-paginate-v2'
-import aggregatePaginate  from 'mongoose-aggregate-paginate-v2'
+import mongoosePaginate from 'mongoose-paginate-v2'
+// import aggregatePaginate  from 'mongoose-aggregate-paginate-v2'
 
 const productsCollection= 'Products'
 
@@ -44,7 +44,7 @@ const productSchema = new Schema(
   }
 );
 
-//productSchema.plugin(mongoosePaginate)
-productSchema.plugin(aggregatePaginate)
+productSchema.plugin(mongoosePaginate)
+// productSchema.plugin(aggregatePaginate)
 
 export const Product = model(productsCollection, productSchema);

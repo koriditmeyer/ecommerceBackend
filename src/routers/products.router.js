@@ -14,29 +14,30 @@ const pm = new ProductManager();
 router.get("/", async (req, res) => {
   // Retrieve query parameters with default values
   // @ts-ignore
-  const limit = parseInt(req.query.limit) || 2; // Page size : Default limit is 10
-  const category = req.query.category; // Retrieve the category
-  // @ts-ignore
-  const page = parseInt(req.query.page) || 2; // Default page is 1
-  // @ts-ignore
-  const sortOption = req.query.sort || ""; // Default sort is empty, meaning no sort
+  // const limit = parseInt(req.query.limit) || 2; // Page size : Default limit is 10
+  // console.log(limit)
+  // const category = req.query.category; // Retrieve the category
+  // // @ts-ignore
+  // const page = parseInt(req.query.page) || 1; // Default page is 1
+  // // @ts-ignore
+  // const sortOption = req.query.sort || ""; // Default sort is empty, meaning no sort
 
-  // Set up filter and options for aggregation
-  let matchStage = {};
-  // If a category filter is provided, use it in the match stage
-  if (category) {
-    matchStage.category = category;
-  }
-  // If a search query is provided, use it to filter the title
-  if (req.query.query) {
-    matchStage.title = new RegExp(req.query.query, "i"); //match both uppercase and lowercase instances of the search term
-  }
+  // // Set up filter and options for aggregation
+  // let matchStage = {};
+  // // If a category filter is provided, use it in the match stage
+  // if (category) {
+  //   matchStage.category = category;
+  // }
+  // // If a search query is provided, use it to filter the title
+  // if (req.query.query) {
+  //   matchStage.title = new RegExp(req.query.query, "i"); //match both uppercase and lowercase instances of the search term
+  // }
 
-  // Sorting stage
-  let sortStage = {};
-  if (sortOption) {
-    sortStage.price = sortOption === "desc" ? -1 : 1;
-  }
+  // // Sorting stage
+  // let sortStage = {};
+  // if (sortOption) {
+  //   sortStage.price = ;
+  // }
 
   // Aggregate pipeline stages
   // const aggregateQuery = [
@@ -44,37 +45,42 @@ router.get("/", async (req, res) => {
   //   sortStage,
   //   // Add more stages if need
   // ];
-  const aggregateQuery = Product.aggregate([
-    { $match: matchStage },
-  //  { $sort: sortStage },
-  ]);
+  // const aggregateQuery = Product.aggregate([
+  // //  { $match: {category:"Books"} },
+  //  // { $sort: {price: sortOption === "desc" ? -1 : 1} },
+  // ]);
+  const aggregateQuery = req.query.category ? { category: req.query.category } : {}
 
   const options = {
-    page,
-    limit,
-    lean: true,
+    // page:page,
+    // limit:limit,
+    // lean: true,
+    limit: req.query.limit || 2, // tamaño de pagina: 5 por defecto
+    page: req.query.page || 1, // devuelve la primera pagina por defecto
+    lean: true // para que devuelva objetos literales, no de mongoose
   };
 
   try {
-    const products = await Product.aggregatePaginate(aggregateQuery, options);
+    const result = await Product.paginate(aggregateQuery, options);
     //const products = await pm.getProducts({ limit });
-    console.log(products)
     const context = {
-      pageTitle: "Products",
-      existDocs: products.docs.length > 0,
-      docs: products.docs,
-      limit: products.limit,
-      page: products.page,
-      totalPages: products.totalPages,
-      hasNextPage: products.hasNextPage,
-      nextPage: products.nextPage,
-      hasPrevPage: products.hasPrevPage,
-      prevPage: products.prevPage,
-      pagingCounter: products.pagingCounter,
-      totalDocs: products.totalDocs
+      title: "Products",
+      existDocs: result.docs.length > 0,
+      products: result.docs,
+      limit: result.limit,
+      page: result.page,
+      totalPages: result.totalPages,
+      hasNextPage: result.hasNextPage,
+      nextPage: result.nextPage,
+      hasPrevPage: result.hasPrevPage,
+      prevPage: result.prevPage,
+      pagingCounter: result.pagingCounter,
+      totalDocs: result.totalDocs
     };
+    console.log(context)
 
-    const send = res.json(context);
+    res.json(context);
+    //res.render('home',context)
     //console.log(send)
   } catch (error) {
     res.status(400).send({

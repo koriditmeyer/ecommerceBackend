@@ -1,45 +1,35 @@
 <section class="text-gray-600 body-font">
     <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900 text-center">{{title}}</h1>
     <div class="container px-5 py-5 mx-auto">
+        {{#if existDocs}}
         <div class="flex flex-wrap -m-4">
-            {{#if products.existDocs}}           
-                {{#each products.docs}}
-                    {{>item}}
-                {{/each}}
-            {{else}}
-                loading...<br><br>
-            {{/if}}
+            {{#each products}}
+            {{>item}}
+            {{/each}}
         </div>
 
-<h3 class=" block my-4">Total products : {{products.totalDocs}}, showing {{products.limit}}</h3>
-        <a 
-            {{#if products.hasPrevPage}} 
-                href="/?limit={{products.limit}}&page={{products.prevPage}}" 
-            {{/if}}
-        >
+        <h3 class=" block my-4">Total products : {{totalDocs}}, showing {{limit}}</h3>
+        <a {{#if hasPrevPage}} href="/?limit={{limit}}&page={{prevPage}}&category={{query.category}}&sort={{query.sort}}" {{/if}}>
             Prev
         </a>
-        [{{ products.page }}/ {{products.totalPages}}]
-        <a
-            {{#if products.hasNextPage}} 
-                href="/?limit={{products.limit}}&page={{products.nextPage}}" 
-            {{/if}}
-        >
+        [{{ page }}/ {{totalPages}}]
+        <a {{#if hasNextPage}} href="/?limit={{limit}}&page={{nextPage}}&category={{query.category}}&sort={{query.sort}}" {{/if}}>
             Next
         </a>
-        
+
         <br>
-        
-        Page: <input class="border" type="text"> <button onclick="irAPag({{products.limit}})">go</button>
+
+        Page: <input class="border" type="text"> <button onclick="irAPag({{limit}})">go</button>
         <script>
             function irAPag(products.limit) {
                 const pagDeseada = document.querySelector('input').value || 1
                 window.location = `/?limit=${products.limit}&page=${products.pagDeseada}`
             }
         </script>
+        {{else}}
+        loading...<br><br>
+        {{/if}}
 
 
     </div>
 </section>
-
-

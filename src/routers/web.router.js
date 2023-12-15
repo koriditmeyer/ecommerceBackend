@@ -26,11 +26,18 @@ webRouter.get("/cart", async (req, res) => {
 webRouter.get("/", async (req, res) => {
   /* Fetch Cart Data */
   try {
+    // Capture query parameters with defaults
+    const limit = req.query.limit || 2;
+    const page = req.query.page || 1;
+    const category = req.query.category || ""; // Default to an empty string if no category is specified
+    const sort = req.query.sort || ""; // Default to an empty string if no sort is specified
+
     /* Fetch all Products Data  */
-    const productResponse = await fetch(`http://localhost:8080/api/products/`);
+    const apiURL = `http://localhost:8080/api/products/?limit=${limit}&page=${page}&category=${category}&sort=${sort}`
+    const productResponse = await fetch(apiURL);
     const products = await productResponse.json();
-    //console.log(products)
-    res.render("home", { title: "My Products", products: products });
+    console.log({ title: "My Products", products });
+    res.render("home", products);
   } catch (error) {
     res.status(500).render("error", { error: error.message });
   }
