@@ -6,11 +6,19 @@
 
 import express from "express";                        // import express server
 import { engine } from "express-handlebars";          // import hadlebars
+import handlebars from 'handlebars';
 import { MONGODB_CNX_STR, PORT } from "./config.js";  // import constants configuration parameters in external file
 import { apiRouter } from "./routers/api.router.js";  // import endpoints
 import { webRouter } from "./routers/web.router.js";  // import endpoints
 import { Server } from "socket.io";                   // import Socket io
 import mongoose from "mongoose";                      // import Mongoose
+
+
+// Register 'eq' Helper
+handlebars.registerHelper('eq', function (value1, value2) {
+  return value1 === value2;
+});
+
 
 /*
  *
@@ -21,6 +29,8 @@ import mongoose from "mongoose";                      // import Mongoose
 await mongoose.connect(MONGODB_CNX_STR)
 console.log(`DB connected to ${MONGODB_CNX_STR}`)
 
+
+
 /*
  *
  * INSTANCES of EXPRESS and HANDLEBARS
@@ -28,7 +38,7 @@ console.log(`DB connected to ${MONGODB_CNX_STR}`)
  */
 
 const app = express();                                // Create app with express
-app.engine("handlebars", engine());                   // Initialize the engine using handlebars
+app.engine("handlebars", engine({ handlebars }));                   // Initialize the engine using handlebars
 const httpServer = app.listen(PORT, () =>             // create httpServer
   console.log(`HTTP server listening on port: ${PORT}`)
 ); 

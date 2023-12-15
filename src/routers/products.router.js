@@ -50,14 +50,15 @@ router.get("/", async (req, res) => {
   //  // { $sort: {price: sortOption === "desc" ? -1 : 1} },
   // ]);
   const aggregateQuery = req.query.category ? { category: req.query.category } : {}
-
+  console.log(req.query.sort)
   const options = {
     // page:page,
     // limit:limit,
     // lean: true,
     limit: req.query.limit || 2, // tamaño de pagina: 5 por defecto
     page: req.query.page || 1, // devuelve la primera pagina por defecto
-    lean: true // para que devuelva objetos literales, no de mongoose
+    lean: true, // para que devuelva objetos literales, no de mongoose
+    sort: req.query.sort === 'desc' ? { price: -1 } : { price: 1 }
   };
 
   try {

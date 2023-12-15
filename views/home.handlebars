@@ -1,29 +1,60 @@
 <section class="text-gray-600 body-font">
     <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900 text-center">{{title}}</h1>
+
     <div class="container px-5 py-5 mx-auto">
+        <form action="/" method="get" class="mb-5">
+            <!-- Category Selection -->
+            <label for="category">Category:</label>
+            <select name="category" id="category">
+                <option value="">All Categories</option>
+                <option value="Book" {{#if (eq query.category "Book" )}}selected{{/if}}>Book</option>
+                <option value="Magazine" {{#if (eq query.category "Magazine" )}}selected{{/if}}>Magazine</option>
+                <!-- Add more categories as needed -->
+            </select>
+
+            <!-- Sorting Option -->
+            <label for="sort">Sort:</label>
+            <select name="sort" id="sort">
+                <option value="asc" {{#if (eq query.sort "asc" )}}selected{{/if}}>Ascending</option>
+                <option value="desc" {{#if (eq query.sort "desc" )}}selected{{/if}}>Descending</option>
+            </select>
+
+            <!-- Limit Selection -->
+            <label for="limit">Items per page:</label>
+            <input class="border" type="number" id="limit" name="limit" value="{{query.limit}}">
+
+            <!-- Submit Button -->
+            <input type="submit" value="Apply Filters">
+        </form>
+
         {{#if existDocs}}
+        <h3 class=" block my-4">Total products : {{totalDocs}}, showing {{limit}}</h3>
         <div class="flex flex-wrap -m-4">
             {{#each products}}
             {{>item}}
             {{/each}}
         </div>
-
-        <h3 class=" block my-4">Total products : {{totalDocs}}, showing {{limit}}</h3>
-        <a {{#if hasPrevPage}} href="/?limit={{limit}}&page={{prevPage}}&category={{query.category}}&sort={{query.sort}}" {{/if}}>
+        <!-- Pagination Links -->
+        {{#if hasPrevPage}}
+        <a href="/?limit={{limit}}&page={{prevPage}}">
             Prev
         </a>
+        {{/if}}
         [{{ page }}/ {{totalPages}}]
-        <a {{#if hasNextPage}} href="/?limit={{limit}}&page={{nextPage}}&category={{query.category}}&sort={{query.sort}}" {{/if}}>
+        {{#if hasNextPage}}
+        <a href="/?limit={{limit}}&page={{nextPage}}">
             Next
         </a>
-
+        {{/if}}
         <br>
-
-        Page: <input class="border" type="text"> <button onclick="irAPag({{limit}})">go</button>
+        <!-- Page Navigation -->
+        Page: <input class="border" type="text"> <button onclick="goToPage({{limit}})">go</button>
         <script>
-            function irAPag(products.limit) {
-                const pagDeseada = document.querySelector('input').value || 1
-                window.location = `/?limit=${products.limit}&page=${products.pagDeseada}`
+            function goToPage(limit) {
+                const wantedPage = document.querySelector('input').value || 1
+                const category = '{{query.category}}';
+                const sort = '{{query.sort}}';
+                window.location = `/?limit=${limit}&page=${wantedPage}&category=${category}&sort=${sort}`
             }
         </script>
         {{else}}
