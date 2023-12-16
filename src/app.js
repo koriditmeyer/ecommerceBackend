@@ -5,16 +5,17 @@
  */
 
 import express from "express";                        // import express server
-import { engine } from "express-handlebars";          // import hadlebars
+import { engine } from "express-handlebars";          // import engine from hadlebars
 import handlebars from 'handlebars';
 import { MONGODB_CNX_STR, PORT } from "./config.js";  // import constants configuration parameters in external file
 import { apiRouter } from "./routers/api.router.js";  // import endpoints
 import { webRouter } from "./routers/web.router.js";  // import endpoints
+import { cookieRouter } from "./routers/cookie.router.js";  // import endpoints
 import { Server } from "socket.io";                   // import Socket io
 import mongoose from "mongoose";                      // import Mongoose
+import cookieParser from "cookie-parser";             // import cookies
 
-
-// Register 'eq' Helper
+// Register 'eq' Helper for Handlebars
 handlebars.registerHelper('eq', function (value1, value2) {
   return value1 === value2;
 });
@@ -38,7 +39,7 @@ console.log(`DB connected to ${MONGODB_CNX_STR}`)
  */
 
 const app = express();                                // Create app with express
-app.engine("handlebars", engine({ handlebars }));                   // Initialize the engine using handlebars
+app.engine("handlebars", engine());                   // Initialize the engine using handlebars
 const httpServer = app.listen(PORT, () =>             // create httpServer
   console.log(`HTTP server listening on port: ${PORT}`)
 ); 
@@ -52,6 +53,7 @@ const io = new Server(httpServer);                    // Update the server to a 
 
 app.use(express.urlencoded({ extended: true }));      // allow server to handle better queries from url
 app.use(express.json());                              // deserialize the json send by client and returns it in body field . If enable we can use req.body
+app.use(cookieParser())                               // use cookieParser to create cookies
 
 /*
  *
@@ -67,14 +69,17 @@ app.set("view engine", "handlebars");                 // use of engine that we i
  * SERVER HTTP
  *
  */
+
 app.use((req,res,next) =>{                           // Middleware at router level - We send IO server inside of the middleware so that all the other midleware can use it
   req['io'] = io
   next()
-})
+}) 
 app.use("/api", apiRouter);                           // Middleware at router level
 //app.use("/", express.static("./public"));           // Incorporated middleware - Webserver // take path from route of package.json
 app.use("/static", express.static("./static"));       // Incorporated middleware - images
 app.use("/", webRouter);                              // External middleware
+app.use(showCookies)                                  // Middleware to intercept cookie
+app.use("/api", cookieRouter)                         // External middleware for cookies
 app.use(function (err, req, res, next) {              // Middleware to manage errors
   res.json({
     status: "error",
@@ -103,3 +108,18 @@ io.on('connection', (socket) => {                          //listen to the conec
     io.sockets.emit('ServerMessages',messages)
   })
 });
+
+/*
+ *
+ * COOKIE MIDDLEWARE
+ *
+ */
+
+
+function showCookies(req, res, next) {
+  console.log('cookies:')
+  console.dir(req.cookies)
+  console.log('cookies firmadas:')
+  console.dir(req.signedCookies)
+  next()
+}
