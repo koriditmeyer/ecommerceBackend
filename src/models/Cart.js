@@ -1,9 +1,9 @@
-import mongoose from "mongoose";
+import {Schema, model} from "mongoose";
 import { randomUUID } from "crypto";
 
 const CartsCollection = 'Cart'
 
-const cartSchema = new mongoose.Schema(
+const cartSchema = new Schema(
   {
     _id: { type: String, default: randomUUID, required: true },
     products: [{
@@ -32,4 +32,4 @@ const cartSchema = new mongoose.Schema(
 //   next()
 // })
 
-export const Cart = mongoose.model(CartsCollection, cartSchema);
+export const Cart = model(CartsCollection, cartSchema);

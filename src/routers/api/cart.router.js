@@ -1,6 +1,6 @@
 import { Router } from "express";
 // import Cart Manager js
-import { CartManager } from "../services/CartManager.js";
+import { CartManager } from "../../services/CartManager.js";
 
 const router = Router();
 
@@ -10,9 +10,7 @@ const cm = new CartManager();
 // ✓	CREATE CART (EMPTY)
 router.post("/", async (req, res) => {
   try {
-    const cartData = [
-      {}
-    ]
+    const cartData = [{}];
     const addedCart = await cm.addCart(cartData);
     res.status(201).json(addedCart);
   } catch (error) {
@@ -70,7 +68,7 @@ router.put("/:cid", async (req, res) => {
   const cid = req.params.cid;
   let products = req.body;
   try {
-    const updatedCart = await cm.updateCart(cid,products);
+    const updatedCart = await cm.updateCart(cid, products);
     res.json(updatedCart);
   } catch (error) {
     res.status(400).send({

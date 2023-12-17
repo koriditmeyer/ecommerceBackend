@@ -1,8 +1,8 @@
 import { Router } from "express"; // import Product Manager js
-import { ProductManager } from "../services/ProductManager.js"; // import constants configuration parameters in external file
+import { ProductManager } from "../../services/ProductManager.js"; // import constants configuration parameters in external file
 import { EventEmitter } from "events";
-import { extractFile } from "../middlewares/multer.js";
-import { Product } from "../models/Product.js";
+import { extractFile } from "../../middlewares/multer.js";
+import { Product } from "../../models/Product.js";
 
 const maxPicUpload = 10;
 const router = Router();
@@ -49,8 +49,10 @@ router.get("/", async (req, res) => {
   // //  { $match: {category:"Books"} },
   //  // { $sort: {price: sortOption === "desc" ? -1 : 1} },
   // ]);
-  const aggregateQuery = req.query.category ? { category: req.query.category } : {}
-  console.log(req.query.sort)
+  const aggregateQuery = req.query.category
+    ? { category: req.query.category }
+    : {};
+  console.log(req.query.sort);
   const options = {
     // page:page,
     // limit:limit,
@@ -58,7 +60,7 @@ router.get("/", async (req, res) => {
     limit: req.query.limit || 2, // tamaño de pagina: 5 por defecto
     page: req.query.page || 1, // devuelve la primera pagina por defecto
     lean: true, // para que devuelva objetos literales, no de mongoose
-    sort: req.query.sort === 'desc' ? { price: -1 } : { price: 1 }
+    sort: req.query.sort === "desc" ? { price: -1 } : { price: 1 },
   };
 
   try {
@@ -76,9 +78,9 @@ router.get("/", async (req, res) => {
       hasPrevPage: result.hasPrevPage,
       prevPage: result.prevPage,
       pagingCounter: result.pagingCounter,
-      totalDocs: result.totalDocs
+      totalDocs: result.totalDocs,
     };
-    console.log(context)
+    console.log(context);
 
     res.json(context);
     //res.render('home',context)

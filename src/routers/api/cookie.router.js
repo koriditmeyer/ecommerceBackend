@@ -4,9 +4,11 @@ export const cookieRouter = Router();
 
 const limitTime = 24 * 60 * 60 * 1000;
 
+
 cookieRouter.get("/setCookie", (req, res) => {
-  res.cookie("appCookie", "test cookie", {
-    maxAge: limitTime, //max age
+  res.cookie("appCookie", "Esta es una cookie muy poderosa", {
+    maxAge: limitTime, //max age (ms)
+    signed: false       //enable signed cookie
   });
   res.send("cookie created");
 });
@@ -30,5 +32,3 @@ cookieRouter.get("/setSignedCookie", (req, res) => {
 cookieRouter.get("/getSignedCookies", (req, res) => {
   res.send(req.signedCookies);
 });
-
-
