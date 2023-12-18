@@ -14,6 +14,7 @@
             <a class="mr-5 hover:text-gray-900" href="/cart">Cart</a>
         </nav>
         {{#if user}}
+        <a class="mr-5 hover:text-gray-900" href="/product/add">Add Product</a>
         <a class="mr-5 hover:text-gray-900" href="/profile">{{user.name}} profile</a>
         <form action="/logout" method="post">
             <button onclick="window.location.href='/logout'"
