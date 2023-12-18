@@ -64,3 +64,20 @@ export function onlyLoggedInWeb(req, res, next) {
   }
   next();
 }
+
+/**
+ *
+ * middleware that checks if there's a user in the session 
+ * and, if so, adds this user to res.locals
+ * This makes the user data accessible in all Handlebars templates.
+ *
+ */
+
+export function addUserDataToLocals(req, res, next) {
+  if (req.session && req.session.user) {
+    res.locals.user = req.session.user;
+  } else {
+    res.locals.user = null;
+  }
+  next();
+}

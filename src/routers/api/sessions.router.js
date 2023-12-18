@@ -10,17 +10,18 @@ export const sessionsRouter = Router();
  */
 sessionsRouter.post("/login", async (req, res) => {
   const { email, password } = req.body;
-
   const user = await User.findOne({ email }).lean();
   if (!user) {
-    return res.status(400)
-    .json({
-        status:"error",
-        message:"login failed"
-    })
-  }
-  //should encript the received and compred with the saved that is emcripted
-  if (password !== user.password) {
+      return res.status(400)
+      .json({
+          status:"error",
+          message:"login failed"
+        })
+    }
+    //should encript the received and compred with the saved that is emcripted
+    console.log(password)
+    console.log(password == user.password)
+  if (password != user.password) {
       return res.status(400)    
       .json({status:"error",message:"login failed"})
     }
@@ -30,6 +31,9 @@ sessionsRouter.post("/login", async (req, res) => {
         email: user.email,
         name: user.name,
         last_name: user.last_name,
+        address: user.address,
+        date: user.date,
+        role: user.role,
     };
   req.session['user'] = userData;
   res.status(201)
@@ -41,7 +45,7 @@ sessionsRouter.get("/current",(req,res)=>{
     if(req.session["user"]){
         return res.json(req.session["user"])
     }
-    res.status(400).json({status:"error",message:"Please login"})
+    res.status(400).json({status:"error",message:"Please login!"})
 })
 
 

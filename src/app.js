@@ -12,7 +12,7 @@ import { apiRouter } from "./routers/api/api.router.js";  // import endpoints
 import { webRouter } from "./routers/web/web.router.js";  // import endpoints
 import { Server } from "socket.io";                   // import Socket io
 import mongoose from "mongoose";                      // import Mongoose
-import { sessions } from "./middlewares/sessions.js"; // import sessions midelware config
+import { sessions, addUserDataToLocals } from "./middlewares/sessions.js"; // import sessions midelware config
 
 // Register 'eq' Helper for Handlebars
 handlebars.registerHelper('eq', function (value1, value2) {
@@ -35,7 +35,7 @@ console.log(`DB connected to ${MONGODB_CNX_STR}`)
 
 /*
  *
- * INSTANCES of EXPRESS and HANDLEBARS
+ * INSTANCES of EXPRESS/ HANDLEBARS/ IO
  *
  */
 
@@ -47,6 +47,8 @@ const httpServer = app.listen(PORT, () =>             // create httpServer
 ); 
 const io = new Server(httpServer);                    // Update the server to a socket server
 
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
 /*
  *
@@ -64,6 +66,7 @@ app.set("view engine", "handlebars");                 // use of engine that we i
  */
 
 app.use(sessions);                                   // External middleware to handle sessions (need to be before other middleware)
+app.use(addUserDataToLocals);                        // External middleware to share session with all pages
 app.use((req,res,next) =>{                           // Middleware at router level - We send IO server inside of the middleware so that all the other midleware can use it
   req['io'] = io
   next()
