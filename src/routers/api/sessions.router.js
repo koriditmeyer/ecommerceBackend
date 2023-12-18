@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { User } from "../../models/User.js";
+import { compareHash } from "../../utils/crypto.js";
 
 export const sessionsRouter = Router();
 
@@ -18,10 +19,8 @@ sessionsRouter.post("/login", async (req, res) => {
           message:"login failed"
         })
     }
-    //should encript the received and compred with the saved that is emcripted
-    console.log(password)
-    console.log(password == user.password)
-  if (password != user.password) {
+    //!should encript the received and compred with the saved that is emcripted
+  if (!compareHash(password, user.password)) {
       return res.status(400)    
       .json({status:"error",message:"login failed"})
     }
@@ -34,6 +33,7 @@ sessionsRouter.post("/login", async (req, res) => {
         address: user.address,
         date: user.date,
         role: user.role,
+        hashedPwd: user.password,
     };
   req.session['user'] = userData;
   res.status(201)

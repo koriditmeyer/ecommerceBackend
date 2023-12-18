@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { User } from "../../models/User.js";
 import { onlyLoggedInAPI } from "../../middlewares/sessions.js";
+import { hash } from "../../utils/crypto.js";
 
 export const usersRouter = Router();
 
@@ -12,11 +13,14 @@ usersRouter.get("/register", async (req, res) => {
 
 usersRouter.post("/register", async (req, res) => {
   try {
+    //! encrypt password!
+    req.body.password = hash(req.body.password);
+
     await User.create(req.body);
     res.redirect("/login");
   } catch (error) {
     res.redirect("/register");
-    console.log(error.message)
+    console.log(error.message);
   }
 });
 
@@ -40,11 +44,14 @@ usersRouter.get("/resetpassword", (req, res) => {
 
 usersRouter.post("/resetpassword", async (req, res) => {
   try {
+    //! encrypt password!
+    req.body.password = hash(req.body.password);
+
     const updatedUser = await User.updateOne(
       { email: req.body.email },
       { $set: { password: req.body.password } },
       { new: true }
-    );
+    ).lean();
 
     if (updatedUser.matchedCount === 0) {
       console.log("User not found");
@@ -54,7 +61,6 @@ usersRouter.post("/resetpassword", async (req, res) => {
       console.log("User password updated successfully");
       res.redirect("/login");
     }
-
   } catch (error) {
     console.log(error);
     res.redirect("/resetpassword");

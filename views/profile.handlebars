@@ -24,6 +24,7 @@
 					<p class="leading-relaxed text-lg mb-4">Adress: {{user.address}}</p>
 					<p class="leading-relaxed text-lg mb-4">Registration Date: {{user.date}}</p>
 					<p class="leading-relaxed text-lg mb-4">Role: {{user.role}}</p>
+					<p class="leading-relaxed text-lg mb-4 break-words">Your Hashed Password: {{user.hashedPwd}}</p>
 					<form action="/logout" method="post">
 						<button type="submit" class="text-indigo-500 inline-flex items-center">Logout!
 							<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"

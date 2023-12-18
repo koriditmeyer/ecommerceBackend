@@ -4,12 +4,7 @@ Welcome to the E-Commerce Express Backend project.
 
 ## 🌎 VIEW - Front end with Handlebars
 
-- Products page: http://localhost:8080/
-- Cart page: http://localhost:8080/cart
-- Product upload page: http://localhost:8080/product/add
-- Chat page: http://localhost:8080/chat
-
-
+- Home: http://localhost:8080/
 
 ## 💻 Technologies Used
 - Programming Language: 
@@ -24,6 +19,7 @@ Welcome to the E-Commerce Express Backend project.
 ![Multer](https://img.shields.io/badge/Multer-Multer-brightgreen?logo=Multer&logoColor=010101&label=%20&labelColor=010101&color=010101)
 ![express-session](https://img.shields.io/badge/expresssession-express_session-brightgreen?logo=Multer&logoColor=010101&label=%20&labelColor=010101&color=010101)
 ![connect-mongo](https://img.shields.io/badge/connectmongo-connect_mongo-brightgreen?logo=Multer&logoColor=010101&label=%20&labelColor=010101&color=010101)
+![bcrypt](https://img.shields.io/badge/bcrypt-bcrypt-brightgreen?logo=Multer&logoColor=010101&label=%20&labelColor=010101&color=010101)
 
 - Database: 
 ![MONGOBD ATLASS](https://img.shields.io/badge/mongodb-MongoBD_Atlas-brightgreen?logo=mongodb&logoColor=47A248&label=%20&labelColor=black&color=47A248)
@@ -39,11 +35,12 @@ Welcome to the E-Commerce Express Backend project.
 
 ## 💼 Technical Elements
 
-18/12/23:
+18/12/23 [V0.2]:
 - [NEW] Add session management with cookies via express-session and connect-mongo.
 - [NEW] Create new endpoints on API and WEB for session management and users registration and profile
+- [NEW] Add password encryption using the bcrypt password-hashing function
 
-14/12/23:
+14/12/23 [V0.1]:
 
 - Migrate file storage from local to MONGODB ATLAS. Update the services to manage the MONGODB queries
 - Use of Mongoose to update CART and PRODUCT classes for schemas
