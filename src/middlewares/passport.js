@@ -1,6 +1,51 @@
 import passport from "passport";
-import { Strategy } from "passport-local";
+import { Strategy as LocalStrategy } from "passport-local";
+import { Strategy as GithubStrategy } from "passport-github2"
+
 import { User } from "../models/User.js";
+
+import { githubCallbackUrl, githubClientSecret, githubClienteId } from '../config.js'
+
+
+/**
+ *
+ * Passport Github Strategy for Registering Users
+ *
+ */
+
+passport.use('github', new GithubStrategy({
+  clientID: githubClienteId,
+  clientSecret: githubClientSecret,
+  callbackURL: githubCallbackUrl
+}, async function verify(accessToken, refreshToken, profile, done) {
+  console.log(profile)
+
+  const user = await User.findOne({ email: profile.username })
+  if (user) {
+    return done(null, {
+      ...user.publicInfoGit(),
+      role: 'user'
+    })
+  }
+
+  try {
+    const registered = await User.create({
+      email: profile.username,
+      password: 'NA',
+      name: profile.displayName || 'NA',
+      last_name: 'NA',
+    })
+    done(null, {
+      ...registered.publicInfoGit(),
+      role: 'user'
+    })
+  } catch (error) {
+    done(error)
+  }
+
+}))
+
+
 
 /**
  *
@@ -10,7 +55,7 @@ import { User } from "../models/User.js";
 
 passport.use(
   "register",
-  new Strategy(
+  new LocalStrategy(
     {
       passReqToCallback: true,                              // Tells Passport to pass the entire request to the callback
       usernameField: "email",                               // Specifies that the email field will be used as the username
@@ -34,7 +79,7 @@ passport.use(
 
 passport.use(
   "login",
-  new Strategy(
+  new LocalStrategy(
     {
       usernameField: "email",
     },

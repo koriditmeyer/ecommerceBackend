@@ -22,6 +22,16 @@ const productSchema = new Schema(
   {
     versionKey: false,
     strict: "throw", // ACTIVATE THAT MONGOBD RETURN ERROR
+    methods: {
+      publicInfoGit: function () {
+        return {
+          email: this.email,
+          name: this.name,
+          last_name: this.last_name,
+        }
+      }
+    },
+
     statics: {
       register: async function (reqBody) {
         //! encrypt password!

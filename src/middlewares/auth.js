@@ -32,8 +32,8 @@ export function onlyAdmins(req, res, next) {
  */
 
 export function addUserDataToLocals(req, res, next) {
-  if (req.session && req.session.user) {
-    res.locals.user = req.session.user;
+  if (req.isAuthenticated() && req.user) {
+    res.locals.user = req.user;
   } else {
     res.locals.user = null;
   }

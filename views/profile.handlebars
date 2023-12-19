@@ -13,7 +13,13 @@
 						</svg>
 					</div>
 					<div class="flex flex-col items-center text-center justify-center">
-						<h2 class="font-medium title-font mt-4 text-gray-900 text-lg">{{userDB.name}}</h2>
+						<h2 class="font-medium title-font mt-4 text-gray-900 text-lg">
+							{{#if (eq userDB.name 'NA' )}}
+							{{userDB.email}}
+							{{else}}
+							{{userDB.name}}
+							{{/if}}
+							</h2>
 						<div class="w-12 h-1 bg-indigo-500 rounded mt-2 mb-4"></div>
 						<p class="text-base">{{userDB.last_name}}</p>
 					</div>
@@ -26,13 +32,13 @@
 					<p class="leading-relaxed text-lg mb-4 break-words">Cookie created : {{session.cookie}}</p>
 					<h3 class="leading-relaxed text-xl font-semibold mb-4">Your session Data that is shared from DB:
 					</h3>
+					<p class="leading-relaxed text-lg mb-4">Email: {{userDB.email}}</p>
 					<p class="leading-relaxed text-lg mb-4">Name: {{user.name}}</p>
 					<p class="leading-relaxed text-lg mb-4">Role: {{user.role}}</p>
 					<h3 class="leading-relaxed text-xl font-semibold mb-4">Your additional Data from DB (not shared):
 					</h3>
-					<p class="leading-relaxed text-lg mb-4">Registration Date: {{userDB.last_name}}</p>
-					<p class="leading-relaxed text-lg mb-4">Registration Date: {{userDB.email}}</p>
-					<p class="leading-relaxed text-lg mb-4">Registration Date: {{userDB.date}}</p>
+					<p class="leading-relaxed text-lg mb-4">Last Name: {{userDB.last_name}}</p>
+					<p class="leading-relaxed text-lg mb-4 break-words">Registration Date: {{userDB.date}}</p>
 					<p class="leading-relaxed text-lg mb-4 break-words">Your Hashed Password : {{userDB.password}}</p>
 					<form action="/logout" method="post">
 						<button type="submit" class="text-indigo-500 inline-flex items-center">Logout!

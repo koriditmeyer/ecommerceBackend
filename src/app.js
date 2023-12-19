@@ -25,6 +25,7 @@ handlebars.registerHelper('eq', function (value1, value2) {
 
 
 
+
 /*
  *
  * CONNECT TO MONGO DB before creating the app with express

@@ -10,7 +10,7 @@ sessionsRouter.get("/login", async (req, res) => {
   });
 });
 
-//same as API but instead of json return views
+//local
 sessionsRouter.post(
   "/login",
   passport.authenticate("login", {
@@ -18,6 +18,19 @@ sessionsRouter.post(
     failureRedirect: "/login",
   })
 );
+
+//github
+sessionsRouter.get('/githublogin',
+  passport.authenticate('github', { scope: ['user:email'] })
+)
+
+sessionsRouter.get('/githubcallback',
+  passport.authenticate('github', {
+    successRedirect: '/profile',
+    failureRedirect: '/login',
+  })
+)
+
 
 sessionsRouter.post("/logout", (req, res) => {
   req.logout((error) => {

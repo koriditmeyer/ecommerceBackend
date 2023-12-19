@@ -15,7 +15,13 @@
         </nav>
         {{#if user}}
         <a class="mr-5 hover:text-gray-900" href="/product/add">Add Product</a>
-        <a class="mr-5 hover:text-gray-900" href="/profile">{{user.name}} profile</a>
+        <a class="mr-5 hover:text-gray-900" href="/profile">
+            {{#if (eq user.name 'NA' )}}
+            {{user.email}}
+            {{else}}
+            {{user.name}}
+            {{/if}}
+            profile</a>
         <form action="/logout" method="post">
             <button onclick="window.location.href='/logout'"
                 class="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">logout

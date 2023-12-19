@@ -4,7 +4,7 @@
  *
  */
 
-import { MONGODB_CNX_STR } from "../config.js"; // import constants configuration parameters in external file
+import { MONGODB_CNX_STR, SESSION_SECRET } from "../config.js"; // import constants configuration parameters in external file
 import session from "express-session"; // import session (enable sessions creation with cookies)
 // import FileStore from "session-file-store";              // import File storage capacity to session
 import MongoStore from "connect-mongo"; // import session creation with mongo
@@ -37,7 +37,7 @@ const store = MongoStore.create({
 export const sessions = session({
   // use session midelware
   store,
-  secret: "dfgdfgdfe45#23@@we2_?>sd",
+  secret: SESSION_SECRET,
   resave: true, // Allow to maintain session alive
   saveUninitialized: true,
 });
