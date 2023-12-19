@@ -20,6 +20,7 @@ Welcome to the E-Commerce Express Backend project.
 ![express-session](https://img.shields.io/badge/expresssession-express_session-brightgreen?logo=Multer&logoColor=010101&label=%20&labelColor=010101&color=010101)
 ![connect-mongo](https://img.shields.io/badge/connectmongo-connect_mongo-brightgreen?logo=Multer&logoColor=010101&label=%20&labelColor=010101&color=010101)
 ![bcrypt](https://img.shields.io/badge/bcrypt-bcrypt-brightgreen?logo=Multer&logoColor=010101&label=%20&labelColor=010101&color=010101)
+![bcrypt](https://img.shields.io/badge/passport-passport-brightgreen?logo=passport&logoColor=34E27A&label=%20&labelColor=010101&color=34E27A)
 
 - Database: 
 ![MONGOBD ATLASS](https://img.shields.io/badge/mongodb-MongoBD_Atlas-brightgreen?logo=mongodb&logoColor=47A248&label=%20&labelColor=black&color=47A248)
@@ -35,10 +36,16 @@ Welcome to the E-Commerce Express Backend project.
 
 ## 💼 Technical Elements
 
+20/12/23 [V0.3]:
+- [NEW] Update router, middleware and schema structure to be compatible with passport
+- [NEW] Use Passport as session manager. Implement the local strategies to register and login
+- [NEW] Add passport-github v2 functionality. Add New passport strategy and new github login endpoint
+
+
 18/12/23 [V0.2]:
-- [NEW] Add session management with cookies via express-session and connect-mongo.
-- [NEW] Create new endpoints on API and WEB for session management and users registration and profile
-- [NEW] Add password encryption using the bcrypt password-hashing function
+- Add session management with cookies via express-session and connect-mongo.
+- Create new endpoints on API and WEB for session management and users registration and profile
+- Add password encryption using the bcrypt password-hashing function
 
 14/12/23 [V0.1]:
 
