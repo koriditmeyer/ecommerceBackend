@@ -46,10 +46,7 @@ const productSchema = new Schema(
         let userData = {
           email: user.email,
           name: user.name,
-          last_name: user.last_name,
-          date: user.date,
           role: user.role,
-          hashedPwd: user.password,
         };
         return userData;
       },

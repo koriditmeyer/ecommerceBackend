@@ -1,6 +1,6 @@
 export function onlyLoggedInAPI(req, res, next) {
   //* middleware of Authorization
-  if (!req.session["user"]) {
+  if (!req.isAuthenticated()) {
     return res.status(400).json({ status: "error", message: "Please login" });
     //return res.redirect('/login')
   }
@@ -8,12 +8,20 @@ export function onlyLoggedInAPI(req, res, next) {
 }
 
 export function onlyLoggedInWeb(req, res, next) {
-  if (!req.session["user"]) {
+  if (!req.isAuthenticated()) {
     // return res.render("errorNotLoggedIn.handlebars",{})
     return res.redirect("/login");
   }
   next();
 }
+
+export function onlyAdmins(req, res, next) {
+  if (req.user.rol !== 'admin') {
+    return res.status(403).json({ status: 'error', message: 'only for admins' })
+  }
+  next()
+}
+
 
 /**
  *

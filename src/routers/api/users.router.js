@@ -1,6 +1,8 @@
 import { Router } from "express";
+import passport from 'passport'
+
 import { User } from "../../models/User.js";
-import { onlyLoggedInAPI } from "../../middlewares/auth.js";
+import { onlyAdmins, onlyLoggedInAPI } from "../../middlewares/auth.js";
 
 export const usersRouter = Router();
 
@@ -12,31 +14,38 @@ export const usersRouter = Router();
 
 usersRouter.post(
   "/",
-  // DIVIDE MIDDLEWARE IN 2 FUNCTIONS
-  // 1st FUNCTION
-  async (req, res, next) => {
-    try {
-      req.userData = await User.register(req.body);
-      next();
-    } catch (error) {
-      console.log(error.message);
-      res.status(400).json({ status: "error", message: error.message });
-    }
+  passport.authenticate('register', {
+    failWithError: true
+  }),
+  function (req, res) {
+    res.status(201).json({ status: 'success', payload: req.user })
   },
-  // 2nd FUNCTION of success
-  (req, res) => {
-    res.status(201).json({ status: "success", payload: req.userData });
+  function (error, req, res, next) {
+    res
+      .status(400)
+      .json({
+        status: 'error',
+        message: error.message
+      })
   }
 );
 
 // We need to integrate a middleware of AUTHORIZATION of so that only allowed user can access to that
 usersRouter.get("/profile", onlyLoggedInAPI, async (req, res) => {
-  const user = await User.findOne(
-    { email: req.session["user"].email },
-    { password: 0 } //not include password
-  ).lean();
-  res.json({ status: "success", payload: user });
+  // const user = await User.findOne(
+  //   { email: req.session["user"].email },
+  //   { password: 0 } //not include password
+  // ).lean();
+  // res.json({ status: "success", payload: user });
+  res.json({ status: 'success', payload: req.user })
 });
+
+
+usersRouter.get('/admin', onlyAdmins, async (req, res) => {
+  const users = await User.find().lean()
+  res.json({ status: 'success', payload: users })
+})
+
 
 usersRouter.put(
   "/",

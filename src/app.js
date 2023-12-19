@@ -14,6 +14,8 @@ import { Server } from "socket.io";                           // import Socket i
 import mongoose from "mongoose";                              // import Mongoose
 import { sessions } from "./middlewares/sessions.js";         // import sessions midelware config
 import { addUserDataToLocals } from "./middlewares/auth.js";  // import other sessions midelware config
+import { autenticacion } from "./middlewares/passport.js";
+import cookieParser from "cookie-parser";
 
 // Register 'eq' Helper for Handlebars
 handlebars.registerHelper('eq', function (value1, value2) {
@@ -65,13 +67,17 @@ app.set("view engine", "handlebars");                 // use of engine that we i
  * SERVER HTTP
  *
  */
+app.use(cookieParser())       // use cookieParser to create cookies with secret key
 
 app.use(sessions);                                   // External middleware to handle sessions (need to be before other middleware)
+app.use(autenticacion)                               // External middleware to Initialize Passport and restore authentication state, if any, from the session
 app.use(addUserDataToLocals);                        // External middleware to share session with all pages
+
 app.use((req,res,next) =>{                           // Middleware at router level - We send IO server inside of the middleware so that all the other midleware can use it
   req['io'] = io
   next()
-}) 
+})
+
 app.use("/api", apiRouter);                           // Middleware at router level
 //app.use("/", express.static("./public"));           // Incorporated middleware - Webserver // take path from route of package.json
 app.use("/static", express.static("./static"));       // Incorporated middleware - images

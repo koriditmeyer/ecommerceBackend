@@ -5,7 +5,6 @@
  */
 
 import { MONGODB_CNX_STR } from "../config.js"; // import constants configuration parameters in external file
-//import cookieParser from "cookie-parser";                 // import cookies - if use session no need to import as already in session
 import session from "express-session"; // import session (enable sessions creation with cookies)
 // import FileStore from "session-file-store";              // import File storage capacity to session
 import MongoStore from "connect-mongo"; // import session creation with mongo
@@ -29,7 +28,6 @@ const store = MongoStore.create({
   ttl: 60 * 60 * 24, // time the session lives (s)
 });
 
-//app.use(cookieParser('dfgdfgdfe45#23@@we2_?>sd'))       // use cookieParser to create cookies with secret key
 
 /*
  *

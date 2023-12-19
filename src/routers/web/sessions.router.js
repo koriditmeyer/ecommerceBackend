@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { User } from "../../models/User.js";
+import passport from "passport";
 
 export const sessionsRouter = Router();
 
@@ -11,29 +11,19 @@ sessionsRouter.get("/login", async (req, res) => {
 });
 
 //same as API but instead of json return views
-sessionsRouter.post("/login",
-  // DIVIDE MIDDLEWARE IN 2 FUNCTIONS
-  // 1st FUNCTION
-  async (req, res, next) => {
-    const { email, password } = req.body;
-    let userData;
-    try {
-      userData = await User.authenticate(email, password);
-      req.session["user"] = userData;
-      next();
-    } catch (error) {
-      console.log(error.message);
-      res.redirect("/login");
-    }
-  },
-  // 2nd FUNCTION of success
-  (req, res) => {
-    res.redirect("/profile");
-  }
+sessionsRouter.post(
+  "/login",
+  passport.authenticate("login", {
+    successRedirect: "/profile",
+    failureRedirect: "/login",
+  })
 );
 
 sessionsRouter.post("/logout", (req, res) => {
-  req.session.destroy((err) => {
+  req.logout((error) => {
+    if (error) {
+      console.log(error);
+    }
     res.redirect("/login");
   });
 });
