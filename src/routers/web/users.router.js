@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { User } from "../../models/User.js";
-import { onlyLoggedInAPI } from "../../middlewares/sessions.js";
-import { hash } from "../../utils/crypto.js";
+import { onlyLoggedInAPI } from "../../middlewares/auth.js";
 
 export const usersRouter = Router();
 
@@ -11,18 +10,24 @@ usersRouter.get("/register", async (req, res) => {
   });
 });
 
-usersRouter.post("/register", async (req, res) => {
-  try {
-    //! encrypt password!
-    req.body.password = hash(req.body.password);
-
-    await User.create(req.body);
+usersRouter.post(
+  "/register",
+  // DIVIDE MIDDLEWARE IN 2 FUNCTIONS
+  // 1st FUNCTION
+  async (req, res, next) => {
+    try {
+      await User.register(req.body);
+      next();
+    } catch (error) {
+      console.log(error.message);
+      res.redirect("/register");
+    }
+  },
+  // 2nd FUNCTION of success
+  (req, res) => {
     res.redirect("/login");
-  } catch (error) {
-    res.redirect("/register");
-    console.log(error.message);
   }
-});
+);
 
 // We need to integrate a middleware of AUTHORIZATION of so that only allowed user can access to that
 usersRouter.get("/profile", onlyLoggedInAPI, async (req, res) => {
@@ -42,27 +47,19 @@ usersRouter.get("/resetpassword", (req, res) => {
   });
 });
 
-usersRouter.post("/resetpassword", async (req, res) => {
-  try {
-    //! encrypt password!
-    req.body.password = hash(req.body.password);
-
-    const updatedUser = await User.updateOne(
-      { email: req.body.email },
-      { $set: { password: req.body.password } },
-      { new: true }
-    ).lean();
-
-    if (updatedUser.matchedCount === 0) {
-      console.log("User not found");
-    } else if (updatedUser.modifiedCount === 0) {
-      console.log("User found but no changes were made");
-    } else {
-      console.log("User password updated successfully");
-      res.redirect("/login");
+usersRouter.post(
+  "/resetpassword",
+  async (req, res, next) => {
+    const { email, password } = req.body;
+    try {
+      await User.resetPassword(email, password);
+      next();
+    } catch (error) {
+      console.log(error);
+      res.redirect("/resetpassword");
     }
-  } catch (error) {
-    console.log(error);
-    res.redirect("/resetpassword");
+  },
+  (req, res) => {
+    res.redirect("/login");
   }
-});
+);

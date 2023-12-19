@@ -52,7 +52,7 @@ router.get("/", async (req, res) => {
   const aggregateQuery = req.query.category
     ? { category: req.query.category }
     : {};
-  console.log(req.query.sort);
+  // console.log(req.query.sort);
   const options = {
     // page:page,
     // limit:limit,
@@ -80,7 +80,7 @@ router.get("/", async (req, res) => {
       pagingCounter: result.pagingCounter,
       totalDocs: result.totalDocs,
     };
-    console.log(context);
+    // console.log(context);
 
     res.json(context);
     //res.render('home',context)

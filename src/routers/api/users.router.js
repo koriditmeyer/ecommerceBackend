@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { User } from "../../models/User.js";
-import { onlyLoggedInAPI } from "../../middlewares/sessions.js";
-import { hash } from "../../utils/crypto.js";
+import { onlyLoggedInAPI } from "../../middlewares/auth.js";
 
 export const usersRouter = Router();
 
@@ -11,17 +10,24 @@ export const usersRouter = Router();
  *
  */
 
-usersRouter.post("/", async (req, res) => {
-  try {
-    //! encrypt password!
-    req.body.password = hash(req.body.password);
-
-    const user = await User.create(req.body);
-    res.status(201).json({ status: "success", payload: user });
-  } catch (error) {
-    res.status(400).json({ status: "error", message: error.message });
+usersRouter.post(
+  "/",
+  // DIVIDE MIDDLEWARE IN 2 FUNCTIONS
+  // 1st FUNCTION
+  async (req, res, next) => {
+    try {
+      req.userData = await User.register(req.body);
+      next();
+    } catch (error) {
+      console.log(error.message);
+      res.status(400).json({ status: "error", message: error.message });
+    }
+  },
+  // 2nd FUNCTION of success
+  (req, res) => {
+    res.status(201).json({ status: "success", payload: req.userData });
   }
-});
+);
 
 // We need to integrate a middleware of AUTHORIZATION of so that only allowed user can access to that
 usersRouter.get("/profile", onlyLoggedInAPI, async (req, res) => {
@@ -32,30 +38,22 @@ usersRouter.get("/profile", onlyLoggedInAPI, async (req, res) => {
   res.json({ status: "success", payload: user });
 });
 
-usersRouter.put("/", async function (req, res) {
-  try {
-    //! encrypt password!
-    req.body.password = hash(req.body.password);
-
-    const updatedUser = await User.updateOne(
-      { email: req.body.email },
-      { $set: { password: req.body.password } },
-      { new: true }
-    );
-
-    if (updatedUser.matchedCount === 0) {
-      return res
-        .status(404)
-        .json({ status: "error", message: "user not found" });
-    } else if (updatedUser.modifiedCount === 0) {
-      return res.status(404).json({
-        status: "error",
-        message: "user found but no changes where made",
-      });
-    } else {
-      res.status(201).json({ status: "success", payload: updatedUser });
+usersRouter.put(
+  "/",
+  // DIVIDE MIDDLEWARE IN 2 FUNCTIONS
+  // 1st FUNCTION
+  async (req, res, next) => {
+    const { email, password } = req.body;
+    try {
+      req.userUpdated = User.resetPassword(email, password);
+      next();
+    } catch (error) {
+      console.log(error.message);
+      res.status(400).json({ status: "error", message: error.message });
     }
-  } catch (error) {
-    res.status(400).json({ status: "error", message: error.message });
+  },
+  // 2nd FUNCTION of success
+  (req, res) => {
+    res.status(201).json({ status: "success", payload: req.userUpdated});
   }
-});
+);

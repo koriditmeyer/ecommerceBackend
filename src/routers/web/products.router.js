@@ -37,7 +37,7 @@ productsRouter.get("/", async (req, res) => {
     const apiURL = `http://localhost:8080/api/products/?limit=${limit}&page=${page}&category=${category}&sort=${sort}`;
     const productResponse = await fetch(apiURL);
     const products = await productResponse.json();
-    console.log({ title: "My Products", products });
+    // console.log({ title: "My Products", products });
     res.render("home", products);
   } catch (error) {
     res.status(500).render("error", { error: error.message });
@@ -67,7 +67,7 @@ productsRouter.get("/product/:id", async (req, res) => {
       throw new Error(errorResponse.message); // Use the error message from the API
     }
     const product = await productResponse.json();
-    console.log(product.thumbnail[0]);
+    // console.log(product.thumbnail[0]);
     res.render("productDetail", { product: product });
   } catch (error) {
     console.log(error.message);

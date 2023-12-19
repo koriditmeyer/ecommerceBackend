@@ -4,15 +4,16 @@
  *
  */
 
-import express from "express";                        // import express server
-import { engine } from "express-handlebars";          // import engine from hadlebars
+import express from "express";                                // import express server
+import { engine } from "express-handlebars";                  // import engine from hadlebars
 import handlebars from 'handlebars';
-import { MONGODB_CNX_STR, PORT } from "./config.js";  // import constants configuration parameters in external file
-import { apiRouter } from "./routers/api/api.router.js";  // import endpoints
-import { webRouter } from "./routers/web/web.router.js";  // import endpoints
-import { Server } from "socket.io";                   // import Socket io
-import mongoose from "mongoose";                      // import Mongoose
-import { sessions, addUserDataToLocals } from "./middlewares/sessions.js"; // import sessions midelware config
+import { MONGODB_CNX_STR, PORT } from "./config.js";          // import constants configuration parameters in external file
+import { apiRouter } from "./routers/api/api.router.js";      // import endpoints
+import { webRouter } from "./routers/web/web.router.js";      // import endpoints
+import { Server } from "socket.io";                           // import Socket io
+import mongoose from "mongoose";                              // import Mongoose
+import { sessions } from "./middlewares/sessions.js";         // import sessions midelware config
+import { addUserDataToLocals } from "./middlewares/auth.js";  // import other sessions midelware config
 
 // Register 'eq' Helper for Handlebars
 handlebars.registerHelper('eq', function (value1, value2) {
