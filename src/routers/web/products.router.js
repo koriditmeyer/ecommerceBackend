@@ -1,14 +1,21 @@
 import { Router } from "express";
-
+import passport from "passport";
+import { usersOnly } from "../../middlewares/authorization.js";
 export const productsRouter = Router();
 
 import { EventEmitter } from "events";
 var ee = new EventEmitter();
 
-productsRouter.get("/cart", async (req, res) => {
+productsRouter.get("/cart",
+passport.authenticate("jwt", {
+  failWithError: true,
+  session: false,
+}),
+usersOnly, 
+async (req, res) => {
   /* Fetch Cart Data */
   try {
-    const cid = "69fca416-2cfe-4df0-a697-f4aeae8e8d65"; // example of cart id
+    const cid = "4821a7d5-4fb5-40f7-9bd3-210c10877fa7"; // example of cart id
     const cartResponse = await fetch(`http://localhost:8080/api/carts/${cid}`);
     const cart = await cartResponse.json();
 
@@ -27,14 +34,10 @@ productsRouter.get("/cart", async (req, res) => {
 productsRouter.get("/", async (req, res) => {
   /* Fetch Cart Data */
   try {
-    // Capture query parameters with defaults
-    const limit = req.query.limit || 2;
-    const page = req.query.page || 1;
-    const category = req.query.category || ""; // Default to an empty string if no category is specified
-    const sort = req.query.sort || ""; // Default to an empty string if no sort is specified
-
+    // Capture query parameters 
+    const queryParams = new URLSearchParams(req.query).toString();
     /* Fetch all Products Data  */
-    const apiURL = `http://localhost:8080/api/products/?limit=${limit}&page=${page}&category=${category}&sort=${sort}`;
+    const apiURL = `http://localhost:8080/api/products/?${queryParams}`;
     const productResponse = await fetch(apiURL);
     const products = await productResponse.json();
     // console.log({ title: "My Products", products });

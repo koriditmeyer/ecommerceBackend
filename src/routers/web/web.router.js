@@ -5,6 +5,7 @@ import { sessionsRouter } from './sessions.router.js'
 import { usersRouter } from './users.router.js'
 
 
+
 export const webRouter = Router();
 
 
@@ -12,3 +13,4 @@ webRouter.use("/", productsRouter)
 webRouter.use("/", chatRouter)
 webRouter.use("/", sessionsRouter)
 webRouter.use("/", usersRouter)
+

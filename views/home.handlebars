@@ -2,7 +2,7 @@
     <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900 text-center">{{title}}</h1>
 
     <div class="container px-5 py-5 mx-auto">
-        <form action="/" method="get" class="mb-5">
+        <form id="sortForm"  class="mb-5">
             <!-- Category Selection -->
             <label for="category">Category:</label>
             <select name="category" id="category">
@@ -36,31 +36,24 @@
         </div>
         <!-- Pagination Links -->
         {{#if hasPrevPage}}
-        <a href="/?limit={{limit}}&page={{prevPage}}">
+        <a id="prev" onclick="goToPage({{prevPage}})">
             Prev
         </a>
         {{/if}}
         [{{ page }}/ {{totalPages}}]
         {{#if hasNextPage}}
-        <a href="/?limit={{limit}}&page={{nextPage}}">
+        <a id="next" onclick="goToPage({{nextPage}})">
             Next
         </a>
         {{/if}}
         <br>
         <!-- Page Navigation -->
-        Page: <input class="border" type="text"> <button onclick="goToPage({{limit}})">go</button>
-        <script>
-            function goToPage(limit) {
-                const wantedPage = document.querySelector('input').value || 1
-                const category = '{{query.category}}';
-                const sort = '{{query.sort}}';
-                window.location = `/?limit=${limit}&page=${wantedPage}&category=${category}&sort=${sort}`
-            }
-        </script>
+        Page: <input id="page" class="border" type="text"> <button onclick="goToPage(document.getElementById('page').value)">go</button>
         {{else}}
         loading...<br><br>
         {{/if}}
 
-
     </div>
 </section>
+
+<script src="/static/js/products.js"></script>

@@ -5,7 +5,7 @@ export const cookieRouter = Router();
 const limitTime = 24 * 60 * 60 * 1000;
 
 
-cookieRouter.get("/setCookie", (req, res) => {
+cookieRouter.post("/Cookie", (req, res) => {
   res.cookie("appCookie", "Esta es una cookie muy poderosa", {
     maxAge: limitTime, //max age (ms)
     signed: false       //enable signed cookie
@@ -13,22 +13,29 @@ cookieRouter.get("/setCookie", (req, res) => {
   res.send("cookie created");
 });
 
-cookieRouter.get("/getCookie", (req, res) => {
+cookieRouter.get("/Cookie", (req, res) => {
   res.send(req.cookies);
 });
 
-cookieRouter.get("/deleteCookie", (req, res) => {
+cookieRouter.delete("/Cookie", (req, res) => {
   res.clearCookie("appCookie");
   res.send("cookie removed");
 });
 
-cookieRouter.get("/setSignedCookie", (req, res) => {
+cookieRouter.post("/SignedCookie", (req, res) => {
   res.cookie("SignedCookie", "Esta es una cookie muy poderosa", {
     signed: true,
+    httpOnly: true,
+  maxAge: 24 * 60 * 60 * 1000,
   });
   res.send("la cookie firmada fue guardada con éxito");
 });
 
-cookieRouter.get("/getSignedCookies", (req, res) => {
+cookieRouter.get("/SignedCookies", (req, res) => {
   res.send(req.signedCookies);
+});
+
+cookieRouter.delete("/SignedCookie", (req, res) => {
+  res.clearCookie("SignedCookie");
+  res.send("cookie removed");
 });

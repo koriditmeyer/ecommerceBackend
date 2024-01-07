@@ -1,8 +1,10 @@
 import { Router } from "express";
 import passport from "passport";
-
-import { User } from "../../models/User.js";
-import { onlyLoggedInWeb } from "../../middlewares/auth.js";
+import { usersManager } from "../../models/index.js";
+import { 
+  // onlyLoggedInWeb, 
+  usersOnly } from "../../middlewares/authorization.js";
+import { JWT_PRIVATE_KEY } from "../../config/config.js";
 
 export const usersRouter = Router();
 
@@ -12,46 +14,64 @@ usersRouter.get("/register", async (req, res) => {
   });
 });
 
-usersRouter.post(
-  "/register",
-  passport.authenticate("register", {
-    successRedirect: "/profile",
-    failureRedirect: "/register",
-  })
-);
+// usersRouter.post(
+//   "/register",
+//   passport.authenticate("register", {
+//     successRedirect: "/profile",
+//     failureRedirect: "/register",
+//   })
+// );
 
 // We need to integrate a middleware of AUTHORIZATION of so that only allowed user can access to that
-usersRouter.get("/profile", onlyLoggedInWeb, async (req, res) => {
-  let session
-  try {
-    const rawSessionId = req.cookies['connect.sid'];
-    if (rawSessionId) {
-      // URL-decode and extract the signature part
-      const decodedSessionId = decodeURIComponent(rawSessionId);
-      const signature = decodedSessionId.split('.')[1]; // Assuming the format is always correct
-      session ={
-        sessionID: req.sessionID,
-        signature: signature,
-        cookie: req.cookies['connect.sid']
-      }
-    }
-    let userDB
+usersRouter.get(
+  "/profile",
+  passport.authenticate("jwt", {
+    failWithError: true,
+    session: false,
+  }),
+  usersOnly,
+  async (req, res) => {
+    // let session;
     try {
-      userDB = await User.findOne({ email: req.user.email }).lean();
-    } catch (error) {
-      console.log(error.message)
-    }
+      //   const rawSessionId = req.cookies["connect.sid"];
+      //   console.log(rawSessionId)
+      //   if (rawSessionId) {
+      //     // URL-decode and extract the signature part
+      //     const decodedSessionId = decodeURIComponent(rawSessionId);
+      //     const signature = decodedSessionId.split(".")[1]; // Assuming the format is always correct
+      //     session = {
+      //       sessionID: req.sessionID,
+      //       signature: signature,
+      //       cookie: req.cookies["connect.sid"],
+      //     };
+      //   }
 
-    res.render("profile.handlebars", {
-      pageTitle: "Profile",
-      user: req.user,
-      session: session,
-      userDB: userDB
-    });
-  } catch (error) {
-    res.redirect("/login");
+      // Accessing the JWT token from the cookie
+      const jwtToken = req.signedCookies["authorization"];
+      let userDB;
+      try {
+        userDB = await usersManager.findOne({ email: req.user.email }).lean();
+      } catch (error) {
+        console.log(error.message);
+      }
+      req.user
+      res.render("profile.handlebars", {
+        pageTitle: "Profile",
+        user: {email: req.user.email,
+              name: req.user.name, 
+              role: req.user.role, 
+              iat: new Date(req.user.iat * 1000).toLocaleString(), 
+              exp: new Date(req.user.exp * 1000).toLocaleString()},
+        //session: session,
+        token: jwtToken,
+        userDB: userDB,
+      });
+    } catch (error) {
+      console.error("Error in /profile route:", error);
+      res.redirect("/login");
+    }
   }
-});
+);
 
 usersRouter.get("/resetpassword", (req, res) => {
   res.render("resetpassword.handlebars", {
@@ -64,7 +84,7 @@ usersRouter.post(
   async (req, res, next) => {
     const { email, password } = req.body;
     try {
-      await User.resetPassword(email, password);
+      await usersManager.resetPassword(email, password);
       next();
     } catch (error) {
       console.log(error);

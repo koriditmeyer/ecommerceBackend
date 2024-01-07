@@ -2,7 +2,7 @@ import { Router } from "express"; // import Product Manager js
 import { ProductManager } from "../../services/ProductManager.js"; // import constants configuration parameters in external file
 import { EventEmitter } from "events";
 import { extractFile } from "../../middlewares/multer.js";
-import { Product } from "../../models/Product.js";
+import { productsManager } from "../../models/index.js";
 
 const maxPicUpload = 10;
 const router = Router();
@@ -64,7 +64,7 @@ router.get("/", async (req, res) => {
   };
 
   try {
-    const result = await Product.paginate(aggregateQuery, options);
+    const result = await productsManager.paginate(aggregateQuery, options);
     //const products = await pm.getProducts({ limit });
     const context = {
       title: "Products",
@@ -106,7 +106,7 @@ router.get("/:pid", async (req, res) => {
   }
 });
 
-router.post("/", extractFile("pictureURL", maxPicUpload), async (req, res) => {
+router.post("/", extractFile("thumbnail", maxPicUpload), async (req, res) => {
   // to add to req.body the information about picture
   if (req.files?.length) {
     console.log(req.files);
