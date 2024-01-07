@@ -36,10 +36,16 @@ Welcome to the E-Commerce Express Backend project.
 
 ## 💼 Technical Elements
 
+08/01/24 [V0.4]:
+- [NEW] Update endpoints to integrate a success handler and an error handler. 
+- [NEW] Update endpoints to use passport with JWT
+- [NEW] Update passport strategies to use JSON Web Token instead of sessions
+- [NEW] Update the client side HTML and JS to work with JWT
+
 20/12/23 [V0.3]:
-- [NEW] Update router, middleware and schema structure to be compatible with passport
-- [NEW] Use Passport as session manager. Implement the local strategies to register and login
-- [NEW] Add passport-github v2 functionality. Add New passport strategy and new github login endpoint
+- Update router, middleware and schema structure to be compatible with passport
+- Use Passport as session manager. Implement the local strategies to register and login
+- Add passport-github v2 functionality. Add New passport strategy and new github login endpoint
 
 
 18/12/23 [V0.2]:
